@@ -19,9 +19,8 @@ class isAdmin
     public function handle(Request $request, Closure $next,...$roles)
     {
         if (!Auth::check()) {
-            return redirect()->route('login')->withErrors([
-                'message' => 'Bạn phải đăng nhập để truy cập trang này.'
-            ]);
+            Session::flash("error",'Bạn phải đăng nhập mới có thể vào trang này.');
+            return redirect()->route('login');
         }
         $userRole = Auth::user()->Quyen_id;
         foreach ($roles as $role) {
@@ -32,13 +31,12 @@ class isAdmin
         if (Auth::check()){
             Session::flash("error",'Bạn không có quyền truy cập vào trang này.');
             return redirect()->route('login')->withErrors([
-                'message' => 'Bạn không có quyền truy cập vào trang này.'
+                'error' => 'Bạn không có quyền truy cập vào trang này.'
             ]);
         }
         else{
-            return redirect()->route('login')->withErrors([
-                'message' => 'Bạn phải đăng nhập để truy cập trang này.'
-            ]);
+            Session::flash("error",'Bạn phải đăng nhập mới có thể vào trang này.');
+            return redirect()->route('login');
         }
         return $next($request);
     }

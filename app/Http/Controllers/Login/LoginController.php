@@ -8,7 +8,9 @@ use Illuminate\Auth\Events\Login;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
+use Psy\Util\Str;
 
 class LoginController extends Controller
 {
@@ -46,14 +48,32 @@ class LoginController extends Controller
             'password' => 'required',
             'confirmpassword'=>'required_with:password'
         ]);
-        DB::table('nguoidung')->insert(
-            [
-                'Ten'=> $request->input('tenNguoiDung'),
-                'username'=> $request->input('email'),
-                'email'=>$request->input('email'),
-                'password'=> bcrypt($request->input('password')),
-                'Quyen_id'=>'1',
-            ]);
+        $token = strtoupper(\Illuminate\Support\Str::random(15));
+        $data=$request->only('name','email','password');
+        $data['token']=$token;
+
+        $checkmail = DB::table('nguoidung')
+            ->where('email','=',$request->input('email'))
+            ->get();
+        if ($checkmail->isEmpty()){
+            DB::table('nguoidung')->insert(
+                [
+                    'Ten'=> $request->input('name'),
+                    'username'=> $request->input('email'),
+                    'email'=>$request->input('email'),
+                    'password'=> bcrypt($request->input('password')),
+                    'Quyen_id'=>'1',
+                    'google_token'=>$token,
+                ]);
+            $customer = DB::table('nguoidung')
+                ->where('email','=',$request->input('email'))
+                ->first();
+            Mail::send('MailTo.xacthuc', compact('customer'), function ($email) use ($customer) {
+                $email->subject('Email kích hoạt tài khoản');
+                $email->to($customer->email, $customer->Ten);
+            });
+        }
+        Session::flash('success','Bạn đã đăng ký thành công. Vui lòng kiểm tra Email để kích hoạt tài khoản');
         return redirect()->route('login');
     }
 
@@ -66,25 +86,39 @@ class LoginController extends Controller
     public function store(Request $request)
     {
         //
-        $user =DB::table('nguoidung')
-            ->where('email', $request->email)
-            ->where('password',md5($request->password))
-            ->first();
+        $request->validate([
+            'email' => 'required',
+            'password' => 'required',
+        ]);
+        $credentials = $request->only('email', 'password');
 
-        if ($user!=null){
-            if (Auth::loginUsingId($user->id)) {
-                // Authentication was successful
-                return redirect()->route('viewHome');
-            } else {
-                // Authentication failed
-                return back()->withErrors(['email' => 'Invalid credentials']);
+        if (Auth::attempt($credentials)){
+            if (Auth::user()->google_stt==0) {
+
+                Auth::logout();
+                Session::flash("error",'Bạn chưa kích hoạt tài khoản');
+                return redirect()->route('login');
             }
+            Session::flash('message', 'Đăng nhập thành công');
+            return redirect()->route('viewHome');
         }else{
-            Session::flash('error', 'Sai thông tin!');
-            return back()->withErrors(['email' => 'Invalid credentials']);
+            dd("11");
+            return back()->with('error','Sai thông tin');
         }
-
-
+//        if ($user!=null){
+//            if (Auth::loginUsingId($user->id)) {
+//                // Authentication was successful
+//                Session::flash('message', 'Đăng nhập thành công');
+//                return redirect()->route('viewHome');
+//            } else {
+//                // Authentication failed
+//                Session::flash('error', 'Có lỗi xảy ra!');
+//                return back();
+//            }
+//        }else{
+//            Session::flash('error', 'Sai thông tin!');
+//            return back()->with('message','Sai thông tin');
+//        }
     }
 
     /**
@@ -132,6 +166,16 @@ class LoginController extends Controller
         //
     }
     public function logout()
+    {
+        Auth::logout();
+        return redirect()->route('viewHome');
+    }
+    public function activate()
+    {
+        Auth::logout();
+        return redirect()->route('viewHome');
+    }
+    public function forget()
     {
         Auth::logout();
         return redirect()->route('viewHome');

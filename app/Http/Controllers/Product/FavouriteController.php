@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
-class ProductController extends Controller
+class FavouriteController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -37,7 +37,27 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $idsp = $request->idsp;
+        $idND = Auth::user()->id;
+        $cart = DB::table('yeuthich')
+            ->where('id_sp','=',$idsp)
+            ->where('id_nd','=',$idND)
+            ->first();
+        if ($cart!=null){
+            DB::table('giohang')
+                ->where('id_sp','=',$idsp)
+                ->where('id_nd','=',$idND)
+                ->delete();
+        }else{
+            DB::table('giohang')
+                ->insert([
+                    'id_nd' => $idND,
+                    'id_sp' => $idsp,
+                ]);
+        }
+
+        \Illuminate\Support\Facades\Session::flash('success','Thêm thành công');
+        return redirect('cart');
     }
 
     /**
@@ -46,37 +66,9 @@ class ProductController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Request $request)
+    public function show($id)
     {
         //
-
-        $id = $request->id;
-        $sanpham = DB::table('sanpham')
-            ->where('id','=',$id)
-            ->first();
-//        dd($sanpham);
-        $danhmuc = DB::table('danhmuc')
-            ->get();
-        if (Auth::check()) {
-            $cart = DB::table('giohang')
-                ->join('sanpham', 'sanpham.id', '=', 'id_sp')
-                ->where('id_nd', '=', Auth::user()->id)
-                ->get();
-            $yeuthich = DB::table('yeuthich')
-                ->join('sanpham', 'sanpham.id', '=', 'idSP')
-                ->where('idND', '=', Auth::user()->id)
-                ->get();
-        }else{
-            $cart = null;
-            $yeuthich=null;
-        }
-        return view("Product.Details",
-            [
-                'cart'=>$cart,
-                'yeuthich'=>$yeuthich,
-                'sanpham'=> $sanpham,
-                'danhmuc'=>$danhmuc,
-            ]);
     }
 
     /**

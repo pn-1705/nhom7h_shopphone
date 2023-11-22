@@ -4,8 +4,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Css Styles -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" integrity="sha512-vKMx8UnXk60zUwyUnUPM3HbQo8QfmNx7+ltw8Pm5zLusl1XIfwcxo8DbWCqMGKaWeNxWA8yrx5v3SaVpMvR3CA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <title>Modern Login Page | AsmrProg</title>
+
+
+    <title>Shop 7H</title>
     <style>
 
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap');
@@ -15,6 +20,36 @@
             box-sizing: border-box;
             font-family: 'Montserrat', sans-serif;
         }
+        .alert{position:relative;padding:.75rem 1.25rem;margin-bottom:1rem;border:1px solid transparent;border-radius:.25rem}
+        .alert-heading{color:inherit}
+        .alert-link{font-weight:700}
+        .alert-dismissible{padding-right:4rem}
+
+        .alert-dismissible .close{position:absolute;top:0;right:0;padding:.75rem 1.25rem;color:inherit}
+        .alert-primary{color:#004085;background-color:#cce5ff;border-color:#b8daff}
+        .alert-primary hr{border-top-color:#9fcdff}
+        .alert-primary .alert-link{color:#002752}
+        .alert-secondary{color:#383d41;background-color:#e2e3e5;border-color:#d6d8db}
+        .alert-secondary hr{border-top-color:#c8cbcf}
+        .alert-secondary .alert-link{color:#202326}
+        .alert-success{color:#155724;background-color:#d4edda;border-color:#c3e6cb}
+        .alert-success hr{border-top-color:#b1dfbb}
+        .alert-success .alert-link{color:#0b2e13}
+        .alert-info{color:#0c5460;background-color:#d1ecf1;border-color:#bee5eb}
+        .alert-info hr{border-top-color:#abdde5}
+        .alert-info .alert-link{color:#062c33}
+        .alert-warning{color:#856404;background-color:#fff3cd;border-color:#ffeeba}
+        .alert-warning hr{border-top-color:#ffe8a1}
+        .alert-warning .alert-link{color:#533f03}
+        .alert-danger{color:#721c24;background-color:#f8d7da;border-color:#f5c6cb}
+        .alert-danger hr{border-top-color:#f1b0b7}
+        .alert-danger .alert-link{color:#491217}
+        .alert-light{color:#818182;background-color:#fefefe;border-color:#fdfdfe}
+        .alert-light hr{border-top-color:#ececf6}
+        .alert-light .alert-link{color:#686868}
+        .alert-dark{color:#1b1e21;background-color:#d6d8d9;border-color:#c6c8ca}
+        .alert-dark hr{border-top-color:#b9bbbe}
+        .alert-dark .alert-link{color:#040505}
 
         body{
             background-color: #c9d6ff;
@@ -250,19 +285,18 @@
         .close-btn:hover {
             color: #ff0000;
         }
-
-
     </style>
+
 </head>
 
 <body>
 
 <div class="container" id="container">
     <div class="form-container sign-up">
-        <form action="/create">
+        <form action="/create" method="POST">
             <h1>Create Account</h1>
             <div class="social-icons">
-                <a href="#" class="icon"><i class="fa-brands fa-google-plus-g"></i></a>
+                <a href="/google" class="icon"><i class="fa-brands fa-google-plus-g"></i></a>
                 <a href="#" class="icon"><i class="fa-brands fa-facebook-f"></i></a>
                 <a href="#" class="icon"><i class="fa-brands fa-github"></i></a>
             </div>
@@ -280,18 +314,19 @@
         <form action="/store" method="POST">
             <h1>Sign In</h1>
             <div class="social-icons">
-                <a href="#" class="icon"><i class="fa-brands fa-google-plus-g"></i></a>
+                <a href="/google" class="icon"><i class="fa-brands fa-google-plus-g"></i></a>
                 <a href="#" class="icon"><i class="fa-brands fa-facebook-f"></i></a>
                 <a href="#" class="icon"><i class="fa-brands fa-github"></i></a>
             </div>
             <span>or use your email password</span>
             <input type="email" placeholder="Email" name = "email">
             <input type="password" placeholder="Password" name = "password">
-            <a href="#">Forget Your Password?</a>
+            <a href="/forget">Forget Your Password?</a>
             <button>Sign In</button>
-            @include('User.alert');
+            @include('User.alert')
             @csrf
         </form>
+
     </div>
     <div class="toggle-container">
         <div class="toggle">
@@ -308,7 +343,6 @@
         </div>
     </div>
 </div>
-
 </body>
 <script>
     const container = document.getElementById('container');
@@ -323,4 +357,6 @@
         container.classList.remove("active");
     });
 </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js" integrity="sha512-VEd+nq25CkR676O+pLBnDW09R7VQX9Mdiij052gVCp5yVH3jGtH70Ho/UUv4mJDsEdTvqRCFZg0NKGiojGnUCw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
 </html>

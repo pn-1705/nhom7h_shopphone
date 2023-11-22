@@ -12,14 +12,20 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
-//Route Login
-Route::get('/login', [\App\Http\Controllers\Login\LoginController::class,'index'])->name('login');
-Route::get('/register', [\App\Http\Controllers\Login\LoginController::class,'show'])->name('register');
-Route::post('/store', [\App\Http\Controllers\Login\LoginController::class,'store']);
-Route::post('/create', [\App\Http\Controllers\Login\LoginController::class,'create']);
 
 
 Route::get('/', [\App\Http\Controllers\Home\HomeController::class,'index'])->name("viewHome");
+//Route Login
+Route::get('/login', [\App\Http\Controllers\Login\LoginController::class,'index'])->name('login');
+Route::post('/store', [\App\Http\Controllers\Login\LoginController::class,'store']);
+Route::post('/create', [\App\Http\Controllers\Login\LoginController::class,'create']);
+Route::get('/google', [\App\Http\Controllers\Api\GoogleController::class, 'getGoogleSignInUrl']);
+Route::get('/google/callback', [\App\Http\Controllers\Api\GoogleController::class, 'loginCallback']);
+Route::get('/activate/{customer}/{token}', [\App\Http\Controllers\Login\LoginController::class,'activate'])->name('activate');
+Route::get('/forget/{customer}/{token}', [\App\Http\Controllers\Login\LoginController::class,'forget'])->name('activate');
+
+
+
 Route::get('/productdetails', [\App\Http\Controllers\Product\ProductController::class,'show'])->name('viewProductDetails');
 
 //Route Admin
@@ -41,10 +47,14 @@ Route::middleware(['auth','isAdmin:2'])->group(function() {
 });
 //Route Logout
 Route::middleware(['auth','isAdmin:1,2,3'])->group(function() {
+
     Route::get('logout', [\App\Http\Controllers\Login\LoginController::class, 'logout']);
+    Route::get('cart', [\App\Http\Controllers\Product\CartController::class, 'index'])->name('cart');
+    Route::POST('updatecart', [\App\Http\Controllers\Product\CartController::class, 'update']);
+    Route::get('addtocart', [\App\Http\Controllers\Product\CartController::class, 'store']);
+
+    Route::get('favourite', [\App\Http\Controllers\Product\FavouriteController::class, 'index'])->name('favourite');
+    Route::get('addtofavourite', [\App\Http\Controllers\Product\FavouriteController::class, 'store']);
 });
 
 
-Route::get('/cart', function () {
-    return view('User.cart');
-});

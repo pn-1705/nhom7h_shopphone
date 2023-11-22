@@ -1,32 +1,39 @@
-@if(Session::has('success'))
-    <div id="successPopup" class="popup-overlay">
-        <div class="popup-content alert alert-success">
-            {{ Session::get('success') }}
-            <span class="close-btn" onclick="closePopup('successPopup');">&times;</span>
-        </div>
+@if(Session::has('errors'))
+    <div class="alert alert-danger alert-dismissible fade show">
+        {{ Session::get('errors') }}
     </div>
 @endif
-
 @if(Session::has('error'))
-    <div id="errorPopup" class="popup-overlay">
-        <div class="popup-content alert alert-danger">
-            {{ Session::get('error') }}
-            <span class="close-btn" onclick="closePopup('errorPopup');">&times;</span>
-        </div>
+    <div class="alert alert-danger alert-dismissible fade show">
+        {{ Session::get('error') }}
     </div>
 @endif
-
-@if(Session::has('warning'))
-    <div id="warningPopup" class="popup-overlay">
-        <div class="popup-content alert alert-warning">
-            {{ Session::get('warning') }}
-            <span class="close-btn" onclick="closePopup('warningPopup');">&times;</span>
-        </div>
+@if(Session::has('success'))
+    <div class="alert alert-success alert-dismissible fade show">
+        {{ Session::get('success') }}
     </div>
 @endif
-
+@if(Session::has('message'))
+    <div class="alert alert-success alert-dismissible fade show">
+        {{ Session::get('message') }}
+    </div>
+@endif
+{{--@if(Session::has('message'))--}}
+{{--    <script>--}}
+{{--        toastr.options = {--}}
+{{--            "progressbar" : true,--}}
+{{--            "closebutton" : true,--}}
+{{--        }--}}
+{{--        toastr.success(" {{ Session::get('message') }}",'Success !',{timeOut:12000});--}}
+{{--    </script>--}}
+{{--@endif--}}
 <script>
-    function closePopup(popupId) {
-        document.getElementById(popupId).style.display = 'none';
-    }
+    // Xóa thông báo thành công sau 5 giây
+    setTimeout(function() {
+        var successAlerts = document.getElementsByClassName('alert');
+
+        for (var i = 0; i < successAlerts.length; i++) {
+            successAlerts[i].remove();
+        }
+    }, 2000);// 5000 milliseconds = 5 seconds
 </script>

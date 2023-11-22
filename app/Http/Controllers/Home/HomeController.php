@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Home;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 
 class HomeController extends Controller
 {
@@ -15,9 +17,32 @@ class HomeController extends Controller
      */
     public function index(Request $request)
     {
-        $sanpham = DB::table('sanpham')
-            ->orderBy('id', 'asc')
-            ->paginate(8);
+        if (Auth::check()) {
+            $cart = DB::table('giohang')
+                ->join('sanpham', 'sanpham.id', '=', 'id_sp')
+                ->where('id_nd', '=', Auth::user()->id)
+                ->get();
+            $yeuthich = DB::table('yeuthich')
+                ->join('sanpham', 'sanpham.id', '=', 'idSP')
+                ->where('idND', '=', Auth::user()->id)
+                ->get();
+        }else{
+            $cart = null;
+            $yeuthich=null;
+        }
+        $search = $request->search;
+        if ($search!=null){
+            $sanpham = DB::table('sanpham')
+                ->where('TenSP', 'like', '%' . $search . '%')
+                ->orderBy('id', 'asc')
+                ->paginate(16)
+                ->withQueryString();
+        }else{
+            $sanpham = DB::table('sanpham')
+                ->orderBy('id', 'asc')
+                ->paginate(16)->withQueryString();
+        }
+
         $danhmuc = DB::table('danhmuc')
             ->get();
 //        if ($request->ajax()) {
@@ -30,8 +55,10 @@ class HomeController extends Controller
 //        }
         return view("User.master",
             [
-            'sanpham'=> $sanpham,
-            'danhmuc'=>$danhmuc,
+                'cart'=>$cart,
+                'yeuthich'=>$yeuthich,
+                'sanpham'=> $sanpham,
+                'danhmuc'=>$danhmuc,
             ]);
     }
 
@@ -99,5 +126,15 @@ class HomeController extends Controller
     public function destroy($id)
     {
         //
+    }
+    public function testmail()
+    {
+        //
+        $name = 'test';
+
+        Mail::send('MailTo.xacthuc', compact('name'), function ($email) {
+            $email->subject('DEMO');
+            $email->to('2002long2906@gmail.com', 'Test Mail 1');
+        });
     }
 }

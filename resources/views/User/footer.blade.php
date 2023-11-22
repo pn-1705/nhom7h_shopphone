@@ -4,7 +4,7 @@
             <div class="col-lg-3 col-md-6 col-sm-6">
                 <div class="footer__about">
                     <div class="footer__about__logo">
-                        <a href="./index.html"><img src="{{ asset('oganimaster/img/logo.png')}}" alt=""></a>
+                        <a href="/"><img src="{{ asset('oganimaster/img/logo.png')}}" alt=""></a>
                     </div>
                     <ul>
                         <li>Address: Da Nang - Viet Nam</li>
@@ -64,8 +64,48 @@
     </div>
 </footer>
 <!-- Footer Section End -->
-
+<script>
+    function searchData() {
+        var txt_search = document.getElementById("txt_search").value;
+        var url = "/?search=" + txt_search;
+        // history.pushState({path: url}, '', url);
+        $.ajax({
+            url: url,
+            type: "GET",
+            dataType: "html",
+            success: function (data) {
+                history.pushState({path: url}, '', url);
+                document.open();
+                document.write(data);
+                document.close();
+            },
+            error: function () {
+                alert("Lỗi khi tải dữ liệu.");
+            }
+        });
+    }
+    function addToFavourite() {
+        var txt_search = document.getElementById("txt_search").value;
+        var url = "/?search=" + txt_search;
+        // history.pushState({path: url}, '', url);
+        $.ajax({
+            url: url,
+            type: "GET",
+            dataType: "html",
+            success: function (data) {
+                history.pushState({path: url}, '', url);
+                document.open();
+                document.write(data);
+                document.close();
+            },
+            error: function () {
+                alert("Lỗi khi tải dữ liệu.");
+            }
+        });
+    }
+</script>
 <!-- Js Plugins -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js" integrity="sha512-VEd+nq25CkR676O+pLBnDW09R7VQX9Mdiij052gVCp5yVH3jGtH70Ho/UUv4mJDsEdTvqRCFZg0NKGiojGnUCw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script src="{{ asset('oganimaster/js/jquery-3.3.1.min.js')}}"></script>
 <script src="{{ asset('oganimaster/js/bootstrap.min.js')}}"></script>
 <script src="{{ asset('oganimaster/js/jquery.nice-select.min.js')}}"></script>

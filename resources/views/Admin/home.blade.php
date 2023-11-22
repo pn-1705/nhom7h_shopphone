@@ -9,6 +9,17 @@
             overflow: hidden;
             text-overflow: ellipsis;
         }
+        .hero__search__form select {
+            position: relative;
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background: transparent;
+            border: none;
+            padding: 5px; /* Điều chỉnh giảm độ rộng của phần chọn để không bị che phủ */
+            font-size: inherit;
+            z-index: 1;
+        }
     </style>
 @endsection
 @section('content')

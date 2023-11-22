@@ -1,4 +1,3 @@
-{{--resposive--}}
 <div class="humberger__menu__overlay"></div>
 <div class="humberger__menu__wrapper">
     <div class="humberger__menu__logo">
@@ -6,10 +5,28 @@
     </div>
     <div class="humberger__menu__cart">
         <ul>
-            <li><a href="#"><i class="fa fa-heart"></i> <span>1</span></a></li>
-            <li><a href="#"><i class="fa fa-shopping-bag"></i> <span>3</span></a></li>
+
+                        @if(\Illuminate\Support\Facades\Auth::check())
+                            <li><a href="#"><i class="fa fa-heart"></i> <span>
+                                {{$yeuthich->count()}}
+                            </span></a></li>
+                        @endif
+
+
+                        @if(\Illuminate\Support\Facades\Auth::check())
+                            <li><a href="/cart"><i class="fa fa-shopping-bag"></i> <span>
+                                {{$cart->count()}}
+                            </span></a></li>
+                        @endif
+
         </ul>
-        <div class="header__cart__price">item: <span>$150.00</span></div>
+        <div class="header__cart__price">item: <span>
+                @if(\Illuminate\Support\Facades\Auth::check())
+                    <div class="header__cart__price">Số dư: <span>{{ number_format(\Illuminate\Support\Facades\Auth::user()->sodu, 0, ',', '.') }} VNĐ</span></div>
+                @else
+                    <div class="header__cart__price">Số dư: <span>0</span></div>
+                @endif</span>
+        </div>
     </div>
     <div class="humberger__menu__widget">
         <div class="header__top__right__language">
@@ -30,6 +47,7 @@
                     <span class="arrow_carrot-down"></span>
                     <ul>
                         <li><a href="#">Chỉnh sửa thông tin</a></li>
+                        <li><a href="#">Nạp số dư</a></li>
                         <li><a href="/logout">Đăng xuất</a></li>
                     </ul>
                 </div>
@@ -42,7 +60,7 @@
     </div>
     <nav class="humberger__menu__nav mobile-menu">
         <ul>
-            <li class="active"><a href="./index.html">Home</a></li>
+            <li class="active"><a href="/">Home</a></li>
             <li><a href="./shop-grid.html">Shop</a></li>
             <li><a href="#">Pages</a>
                 <ul class="header__menu__dropdown">
@@ -109,6 +127,7 @@
                                         <span class="arrow_carrot-down"></span>
                                         <ul>
                                             <li><a href="#">Chỉnh sửa thông tin</a></li>
+                                            <li><a href="#">Nạp số dư</a></li>
                                             <li><a href="/logout">Đăng xuất</a></li>
                                         </ul>
                                     </div>
@@ -127,13 +146,13 @@
         <div class="row">
             <div class="col-lg-3">
                 <div class="header__logo">
-                    <a href="./index.html"><img src="img/logo.png" alt=""></a>
+                    <a href="/"><img src="{{ asset('oganimaster/img/logo.png')}}" alt=""></a>
                 </div>
             </div>
             <div class="col-lg-6">
                 <nav class="header__menu">
                     <ul>
-                        <li class="active"><a href="./index.html">Home</a></li>
+                        <li class="active"><a href="/">Home</a></li>
                         <li><a href="./shop-grid.html">Shop</a></li>
                         <li><a href="#">Pages</a>
                             <ul class="header__menu__dropdown">
@@ -151,10 +170,23 @@
             <div class="col-lg-3">
                 <div class="header__cart">
                     <ul>
-                        <li><a href="#"><i class="fa fa-heart"></i> <span>1</span></a></li>
-                        <li><a href="#"><i class="fa fa-shopping-bag"></i> <span>3</span></a></li>
+                        @if(\Illuminate\Support\Facades\Auth::check())
+                            <li><a href="#"><i class="fa fa-heart"></i> <span>
+                                {{$yeuthich->count()}}
+                            </span></a></li>
+                        @endif
+                        @if(\Illuminate\Support\Facades\Auth::check())
+                            <li><a href="/cart"><i class="fa fa-shopping-bag"></i><span>
+                            {{$cart->count()}}
+                        </span></a></li>
+                        @endif
                     </ul>
-                    <div class="header__cart__price">item: <span>$150.00</span></div>
+                    @if(\Illuminate\Support\Facades\Auth::check())
+                        <div class="header__cart__price">Số dư: <span>{{ number_format(\Illuminate\Support\Facades\Auth::user()->sodu, 0, ',', '.') }} VNĐ</span></div>
+                    @else
+                        <div class="header__cart__price">Số dư: <span>0</span></div>
+                    @endif
+
                 </div>
             </div>
         </div>
@@ -177,7 +209,8 @@
                     </div>
                     <ul>
                         @foreach($danhmuc as $dm)
-                            <li><a href="#">{{$dm->TenDM}}</a></li>
+                            <li><a href="#">{{$dm->TenDM}}</a>
+                            </li>
                         @endforeach
                     </ul>
                 </div>
@@ -185,13 +218,16 @@
             <div class="col-lg-9">
                 <div class="hero__search">
                     <div class="hero__search__form">
-                        <form action="#">
-                            <div class="hero__search__categories">
-                                All Categories
-                                <span class="arrow_carrot-down"></span>
-                            </div>
-                            <input type="text" placeholder="What do yo u need?">
-                            <button type="submit" class="site-btn">SEARCH</button>
+                    <div class="hero__search__form">
+                        <form>
+{{--                            <select id="categorySelect" style="z-index: 1">--}}
+{{--                                <option value="">All Categories</option>--}}
+{{--                                <option value="category1">Category 1</option>--}}
+{{--                                <option value="category2">Category 2</option>--}}
+{{--                                <!-- Thêm các tùy chọn khác nếu cần -->--}}
+{{--                            </select>--}}
+                            <input id="txt_search" type="text" placeholder="What do you need?">
+                            <button id="btn_search" onclick="searchData()" type="submit" class="site-btn">SEARCH</button>
                         </form>
                     </div>
                     <div class="hero__search__phone">
