@@ -114,3 +114,13 @@
 <script src="{{ asset('oganimaster/js/mixitup.min.js')}}"></script>
 <script src="{{ asset('oganimaster/js/owl.carousel.min.js')}}"></script>
 <script src="{{ asset('oganimaster/js/main.js')}}"></script>
+<script>
+    // Xóa thông báo thành công sau 5 giây
+    setTimeout(function() {
+        var successAlerts = document.getElementsByClassName('alert');
+
+        for (var i = 0; i < successAlerts.length; i++) {
+            successAlerts[i].remove();
+        }
+    }, 2000);// 5000 milliseconds = 5 seconds
+</script>

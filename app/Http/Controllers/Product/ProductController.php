@@ -57,23 +57,8 @@ class ProductController extends Controller
 //        dd($sanpham);
         $danhmuc = DB::table('danhmuc')
             ->get();
-        if (Auth::check()) {
-            $cart = DB::table('giohang')
-                ->join('sanpham', 'sanpham.id', '=', 'id_sp')
-                ->where('id_nd', '=', Auth::user()->id)
-                ->get();
-            $yeuthich = DB::table('yeuthich')
-                ->join('sanpham', 'sanpham.id', '=', 'idSP')
-                ->where('idND', '=', Auth::user()->id)
-                ->get();
-        }else{
-            $cart = null;
-            $yeuthich=null;
-        }
         return view("Product.Details",
             [
-                'cart'=>$cart,
-                'yeuthich'=>$yeuthich,
                 'sanpham'=> $sanpham,
                 'danhmuc'=>$danhmuc,
             ]);

@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
 use Psy\Util\Str;
+use function PHPUnit\Framework\isEmpty;
 
 class LoginController extends Controller
 {
@@ -23,15 +24,16 @@ class LoginController extends Controller
     {
         //
         if (Auth::check()){
-            if (Auth::user()->Quyen_id==1){
-                return redirect()->route('viewHome');
-            }elseif (Auth::user()->Quyen_id==2){
-                return redirect()->route('admin');
-            }elseif (Auth::user()->Quyen_id==3){
-                return redirect()->route('CTV');
-            }
+            return redirect()->route('viewHome');
+//            if (Auth::user()->Quyen_id==1){
+//                return redirect()->route('viewHome');
+//            }elseif (Auth::user()->Quyen_id==2){
+//                return redirect()->route('admin.dashboard');
+//            }elseif (Auth::user()->Quyen_id==3){
+//                return redirect()->route('CTV');
+//            }
         }
-        return  view('User.login');
+        return  view('User.pages.login');
     }
 
     /**
@@ -102,7 +104,6 @@ class LoginController extends Controller
             Session::flash('message', 'Đăng nhập thành công');
             return redirect()->route('viewHome');
         }else{
-            dd("11");
             return back()->with('error','Sai thông tin');
         }
 //        if ($user!=null){
@@ -170,10 +171,26 @@ class LoginController extends Controller
         Auth::logout();
         return redirect()->route('viewHome');
     }
-    public function activate()
+    public function activate(Request $request)
     {
-        Auth::logout();
-        return redirect()->route('viewHome');
+        $customer = DB::table('nguoidung')
+            ->where('id' ,'=', $request->customer)
+            ->where('google_token','=',$request->token)
+            ->first();
+        if($customer == null){
+            Session::flash('error','Mã xác thực không hợp lệ');
+            return redirect()->route('login');
+        }else{
+            DB::table('nguoidung')
+                ->where('id', '=', $request->customer)
+                ->where('google_token', '=', $request->token)
+                ->update([
+                    'google_token' => null,
+                    'google_stt' => 1,
+                ]);
+            Session::flash('success','Xác thực thành công.');
+            return redirect()->route('login');
+        }
     }
     public function forget()
     {

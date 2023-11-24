@@ -3,100 +3,43 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Brand;
+use App\Models\Category;
+use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class ProductController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index(Request $request)
+    public function index()
     {
-        //
-//        $menus = DB::table('sanpham')
-//            ->join('loaisanpham', 'sanpham.TH_id', '=', 'loaisanpham.id')
-//            ->join('danhmuc', 'sanpham.DM_id', '=', 'danhmuc.id')
-//            ->select('sanpham.*', 'loaisanpham.TenLSP', 'danhmuc.TenDM')
-//            ->orderBy('sanpham.id', 'asc');
-//        $menus= $menus->paginate(6)->withQueryString();
-//
-//        $loai = DB::table('loaisanpham')
-//            ->get();
-//        $dm = DB::table('danhmuc')
-//            ->get();
-//        return view('admin/Product/listProduct',[
-//            'title'=>'Quản lý sản phẩm',
-//            'menus'=>$menus,
-//            'loais'=>$loai,
-//            'danhmuc'=>$dm,
-//        ]);
-        $idDM = $request->input('idDM');
-        $idNCC = $request->input('idNCC');
-        $sort = $request->input('sortby');
-        $stt = $request->input('stt');
-        if ($idDM == null) $idDM=-1;
-        if ($idNCC == null) $idNCC=-1;
-        if($idDM==-1 and $idNCC==-1){
-            $menus = DB::table('sanpham')
-                ->join('loaisanpham', 'sanpham.TH_id', '=', 'loaisanpham.id')
+        $list = DB::table('sanpham')
+            ->join('danhmuc', 'sanpham.DM_id', '=', 'danhmuc.id')
+            ->join('loaisanpham', 'sanpham.TH_id', '=', 'loaisanpham.id')
+            ->join('khuyenmai', 'sanpham.KM_id', '=', 'khuyenmai.id')
+            ->select('sanpham.*', 'danhmuc.TenDM', 'loaisanpham.TenLSP', 'khuyenmai.TenKM')
+            ->orderBy('danhmuc.id')
+            ->get();
+        if ($id = request()->product) {
+            $list = DB::table('sanpham')
                 ->join('danhmuc', 'sanpham.DM_id', '=', 'danhmuc.id')
-                ->select('sanpham.*', 'loaisanpham.TenLSP', 'danhmuc.TenDM')
-                ->orderBy('sanpham.id', 'asc')
-                ->paginate(6)->withQueryString();
-        }elseif ($idNCC!=-1 and $idDM==-1){
-            $menus = DB::table('sanpham')
                 ->join('loaisanpham', 'sanpham.TH_id', '=', 'loaisanpham.id')
-                ->join('danhmuc', 'sanpham.DM_id', '=', 'danhmuc.id')
-                ->select('sanpham.*', 'loaisanpham.TenLSP', 'danhmuc.TenDM')
-                ->where('loaisanpham.id', $idNCC)
-                ->orderBy('sanpham.id', 'asc')
-                ->paginate(6)->withQueryString();
-        }elseif ($idNCC==-1 and $idDM!=-1){
-            $menus = DB::table('sanpham')
-                ->join('loaisanpham', 'sanpham.TH_id', '=', 'loaisanpham.id')
-                ->join('danhmuc', 'sanpham.DM_id', '=', 'danhmuc.id')
-                ->select('sanpham.*', 'loaisanpham.TenLSP', 'danhmuc.TenDM')
-                ->where('danhmuc.id', $idDM)
-                ->orderBy('sanpham.id', 'asc')
-                ->paginate(6)->withQueryString();
-        }else{
-            $menus = DB::table('sanpham')
-                ->join('loaisanpham', 'sanpham.TH_id', '=', 'loaisanpham.id')
-                ->join('danhmuc', 'sanpham.DM_id', '=', 'danhmuc.id')
-                ->select('sanpham.*', 'loaisanpham.TenLSP', 'danhmuc.TenDM')
-                ->where('danhmuc.id', $idDM)
-                ->where('loaisanpham.id', $idNCC)
-                ->orderBy('sanpham.id', 'asc')
-                ->paginate(6)->withQueryString();
+                ->join('khuyenmai', 'sanpham.KM_id', '=', 'khuyenmai.id')
+                ->orderBy('danhmuc.id')
+                ->where('sanpham.TenSP', 'like', '%' . $id . '%')
+                ->select('sanpham.*', 'danhmuc.TenDM', 'loaisanpham.TenLSP', 'khuyenmai.TenKM')
+                ->get();
         }
-        $loai = DB::table('loaisanpham')
-            ->get();
-        $dm = DB::table('danhmuc')
-            ->get();
-
-        return view('admin/Product/listproduct',[
-            'title'=>'Quản lý sản phẩm',
-            'menus'=>$menus,
-            'loais'=>$loai,
-            'danhmuc'=>$dm,
-            'idDM' =>$idDM,
-            'idNCC' => $idNCC
-        ]);
-
-
+        $list_cate = Category::get();
+        $data['list_cate'] = $list_cate;
+        $list_brand = Brand::get();
+        $data['list_brand'] = $list_brand;
+        $data['list_product'] = $list;
+        return view('admin.pages.product.index', $data);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+    public function addProduct()
     {
-        //
         $cate = DB::table('danhmuc')->get();
         $br = DB::table('loaisanpham')->get();
         $km = DB::table('khuyenmai')->get();
@@ -104,66 +47,77 @@ class ProductController extends Controller
         $data['cate'] = $cate;
         $data['br'] = $br;
         $data['km'] = $km;
-        return  view('Admin/Product/addProduct',$data);
+        return view('admin.pages.product.add', $data);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
+    public function addProductPost(Request $request)
     {
-        //
+        $data = $request->all();
+        $new = new Product();
+        $new->TH_id = $request->TH_id;
+        $new->DM_id = $request->DM_id;
+        $new->MoTa = $request->MoTa;
+        $new->TenSP = $request->TenSP;
+        $new->DonGia = $request->DonGia;
+        $new->SoLuong = $request->SoLuong;
+        $new->HinhAnh1 = 'img/products/'.$request->HinhAnh1;
+        $new->HinhAnh2 = 'img/products/'.$request->HinhAnh2;
+        $new->HinhAnh3 = 'img/products/'.$request->HinhAnh3;
+        $new->KM_id = $request->KM_id;
+        $new->TrangThai = $request->TrangThai;
+        $new->save();
+        return redirect()->route("admin.product.index")->with('add', 'Data inserted thành công');
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function edit($id)
     {
-        //
+        $product = Product::find($id);
+        $cate = DB::table('danhmuc')->get();
+        $br = DB::table('loaisanpham')->get();
+        $km = DB::table('khuyenmai')->get();
+        $data['product'] = $product;
+        $data['cate'] = $cate;
+        $data['br'] = $br;
+        $data['km'] = $km;
+        return view('admin.pages.product.edit', $data);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
+    public function update($id, Request $request)
     {
-        //
+        $new = Product::find($id);
+        $new->TH_id = $request->TH_id;
+        $new->DM_id = $request->DM_id;
+        $new->MoTa = $request->MoTa;
+        $new->TenSP = $request->TenSP;
+        $new->DonGia = $request->DonGia;
+        $new->SoLuong = $request->SoLuong;
+        $new->HinhAnh1 = $request->HinhAnh1;
+        $new->HinhAnh2 = $request->HinhAnh2;
+        $new->HinhAnh3 = $request->HinhAnh3;
+        $new->KM_id = $request->KM_id;
+        $new->TrangThai = $request->TrangThai;
+        $new->save();
+        return redirect()->route("admin.product.index")->with('updated', 'Data updated thành công');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($id)
     {
-        //
+        DB::table('sanpham')->where('id', $id)->delete();
+        return redirect()->route("admin.product.index")->with('del', 'Data deleted thành công');
     }
-    public function filter(Request $request)
+
+    public function active($id)
     {
+        $pr = Product::find($id);
+        $product = Product::find($id);
+        if ($pr->TrangThai == 1) {
+            $product->TrangThai = 0;
+        } else {
+            $product->TrangThai = 1;
+        }
+        $product->save();
+        return redirect()->back()->with('active', 'Đã chuyển trạng thái SP' . $id);
 
     }
+
 }

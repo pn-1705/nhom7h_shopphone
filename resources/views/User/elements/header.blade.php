@@ -1,3 +1,18 @@
+<?php
+    if (Auth::check()) {
+        $cart = DB::table('giohang')
+            ->join('sanpham', 'sanpham.id', '=', 'id_sp')
+            ->where('id_nd', '=', Auth::user()->id)
+            ->get();
+        $yeuthich = DB::table('yeuthich')
+            ->join('sanpham', 'sanpham.id', '=', 'idSP')
+            ->where('idND', '=', Auth::user()->id)
+            ->get();
+    }else{
+        $cart = null;
+        $yeuthich=null;
+    }
+?>
 <div class="humberger__menu__overlay"></div>
 <div class="humberger__menu__wrapper">
     <div class="humberger__menu__logo">
@@ -5,26 +20,20 @@
     </div>
     <div class="humberger__menu__cart">
         <ul>
-
-                        @if(\Illuminate\Support\Facades\Auth::check())
-                            <li><a href="#"><i class="fa fa-heart"></i> <span>
-                                {{$yeuthich->count()}}
-                            </span></a></li>
-                        @endif
-
-
-                        @if(\Illuminate\Support\Facades\Auth::check())
-                            <li><a href="/cart"><i class="fa fa-shopping-bag"></i> <span>
-                                {{$cart->count()}}
-                            </span></a></li>
-                        @endif
-
+            @if(\Illuminate\Support\Facades\Auth::check())
+                <li><a href="#"><i class="fa fa-heart"></i> <span>
+                    {{$yeuthich->count()}}
+                </span></a></li>
+            @endif
+            @if(\Illuminate\Support\Facades\Auth::check())
+                <li><a href="/cart"><i class="fa fa-shopping-bag"></i> <span>
+                    {{$cart->count()}}
+                </span></a></li>
+            @endif
         </ul>
         <div class="header__cart__price">item: <span>
                 @if(\Illuminate\Support\Facades\Auth::check())
                     <div class="header__cart__price">Số dư: <span>{{ number_format(\Illuminate\Support\Facades\Auth::user()->sodu, 0, ',', '.') }} VNĐ</span></div>
-                @else
-                    <div class="header__cart__price">Số dư: <span>0</span></div>
                 @endif</span>
         </div>
     </div>
@@ -46,7 +55,11 @@
                     <div>{{\Illuminate\Support\Facades\Auth::user()->Ten}}</div>
                     <span class="arrow_carrot-down"></span>
                     <ul>
-                        <li><a href="#">Chỉnh sửa thông tin</a></li>
+                        @if(\Illuminate\Support\Facades\Auth::user()->Quyen_id==2)
+                            <li><a href="/admin">Quản trị</a></li>
+                        @endif
+                        <li><a href="/profile">Cập nhật thông tin</a></li>
+                        <li><a href="/doi_mk">Đổi mật khẩu</a></li>
                         <li><a href="#">Nạp số dư</a></li>
                         <li><a href="/logout">Đăng xuất</a></li>
                     </ul>
@@ -126,7 +139,11 @@
                                         <div>{{\Illuminate\Support\Facades\Auth::user()->Ten}}</div>
                                         <span class="arrow_carrot-down"></span>
                                         <ul>
-                                            <li><a href="#">Chỉnh sửa thông tin</a></li>
+                                            @if(\Illuminate\Support\Facades\Auth::user()->Quyen_id==2)
+                                                <li><a href="/admin">Quản trị</a></li>
+                                            @endif
+                                            <li><a href="/profile">Cập nhật thông tin</a></li>
+                                            <li><a href="/doi_mk">Đổi mật khẩu</a></li>
                                             <li><a href="#">Nạp số dư</a></li>
                                             <li><a href="/logout">Đăng xuất</a></li>
                                         </ul>
@@ -183,10 +200,7 @@
                     </ul>
                     @if(\Illuminate\Support\Facades\Auth::check())
                         <div class="header__cart__price">Số dư: <span>{{ number_format(\Illuminate\Support\Facades\Auth::user()->sodu, 0, ',', '.') }} VNĐ</span></div>
-                    @else
-                        <div class="header__cart__price">Số dư: <span>0</span></div>
                     @endif
-
                 </div>
             </div>
         </div>
@@ -208,6 +222,9 @@
                         <span>All departments</span>
                     </div>
                     <ul>
+                        <?php
+                            $danhmuc=\Illuminate\Support\Facades\DB::table('danhmuc')->get();
+                        ?>
                         @foreach($danhmuc as $dm)
                             <li><a href="#">{{$dm->TenDM}}</a>
                             </li>
@@ -215,6 +232,7 @@
                     </ul>
                 </div>
             </div>
+
             <div class="col-lg-9">
                 <div class="hero__search">
                     <div class="hero__search__form">

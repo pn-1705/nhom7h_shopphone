@@ -67,9 +67,9 @@
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.35);
             position: relative;
             overflow: hidden;
-            width: 768px;
+            width: 800px;
             max-width: 100%;
-            min-height: 480px;
+            min-height: 530px;
         }
 
         .container p{
@@ -301,12 +301,13 @@
                 <a href="#" class="icon"><i class="fa-brands fa-github"></i></a>
             </div>
             <span>or use your email for registeration</span>
-            <input type="text" placeholder="Name" name="name">
+            <input type="text" placeholder="Họ" name="Ho">
+            <input type="text" placeholder="Tên" name="Ten">
             <input type="email" placeholder="Email" name="email">
             <input type="password" placeholder="Password" name="password">
-            <input type="password" placeholder="Password" name="confirmpassword">
+            <input type="password" placeholder="Confirm Password" name="confirmpassword">
             <button>Sign Up</button>
-            @include('User.alert');
+            @include('User.alert')
             @csrf
         </form>
     </div>

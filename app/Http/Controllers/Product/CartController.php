@@ -24,13 +24,8 @@ class CartController extends Controller
                 ->join('sanpham','sanpham.id','=','id_sp')
                 ->where('id_nd','=',Auth::user()->id)
                 ->get();
-            $yeuthich = DB::table('yeuthich')
-                ->join('sanpham', 'sanpham.id', '=', 'idSP')
-                ->where('idND', '=', Auth::user()->id)
-                ->get();
 
-            return view('User.cart',[
-                'yeuthich'=>$yeuthich,
+            return view('User.pages.cart',[
                 'cart'=> $sanpham,
                 'danhmuc' => $danhmuc,
             ]);
@@ -121,14 +116,16 @@ class CartController extends Controller
         $idSPs = $request->id;
         $sls = $request->soluong;
         $idND = Auth::user()->id;
+        $tts= $request->trangthai;
         for ($i = 0; $i < count($idSPs); $i++) {
             $idsp = $idSPs[$i];
             $sl = explode("/", $sls[$i])[0];
+            $tt= $tts[$i];
             if ($sl>0){
                 DB::table('giohang')
                     ->where('id_sp','=',$idsp)
                     ->where('id_nd','=',$idND)
-                    ->update(['so_luong'=>$sl]);
+                    ->update(['so_luong'=>$sl,'trangthai'=>$tt]);
             }else{
                 DB::table('giohang')
                     ->where('id_sp','=',$idsp)

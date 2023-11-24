@@ -17,19 +17,6 @@ class HomeController extends Controller
      */
     public function index(Request $request)
     {
-        if (Auth::check()) {
-            $cart = DB::table('giohang')
-                ->join('sanpham', 'sanpham.id', '=', 'id_sp')
-                ->where('id_nd', '=', Auth::user()->id)
-                ->get();
-            $yeuthich = DB::table('yeuthich')
-                ->join('sanpham', 'sanpham.id', '=', 'idSP')
-                ->where('idND', '=', Auth::user()->id)
-                ->get();
-        }else{
-            $cart = null;
-            $yeuthich=null;
-        }
         $search = $request->search;
         if ($search!=null){
             $sanpham = DB::table('sanpham')
@@ -53,10 +40,8 @@ class HomeController extends Controller
 //                    'danhmuc'=>$danhmuc,
 //                ]);
 //        }
-        return view("User.master",
+        return view("User.pages.index",
             [
-                'cart'=>$cart,
-                'yeuthich'=>$yeuthich,
                 'sanpham'=> $sanpham,
                 'danhmuc'=>$danhmuc,
             ]);
