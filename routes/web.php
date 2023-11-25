@@ -116,11 +116,14 @@ Route::middleware(['auth','isAdmin:1,2,3'])->group(function() {
     Route::get('updatecart',[\App\Http\Controllers\Product\CartController::class, 'updatecart'])->name("user.updatecart");
 
     Route::get('/profile', [\App\Http\Controllers\User\UserController::class, 'user_inf'])->name('user.inf');
+    Route::post('/saveprofile', [\App\Http\Controllers\User\UserController::class, 'user_inf_edid'])->name('user.saveinf');
+
     Route::get('/doi_mk', [\App\Http\Controllers\User\UserController::class, 'doi_mk_view'])->name('user.doi_mk_view');
     Route::post('/doi_mk', [\App\Http\Controllers\User\UserController::class, 'doi_mk'])->name('user.doi_mk');
 
     Route::post('/thanhtoan', [\App\Http\Controllers\User\HomeController::class, 'thanh_toan'])->name('user.thanh_toan');
     Route::get('/thanhtoan', [\App\Http\Controllers\User\HomeController::class, 'thanh_toan_view'])->name('user.thanh_toan');
+    Route::get('/addcoupon', [\App\Http\Controllers\User\HomeController::class, 'addcoupon'])->name('user.addcoupon');
 
     Route::get('/get_data_location',[\App\Http\Controllers\User\HomeController::class, 'get_data_location'])->name('user.get_data_location');
 

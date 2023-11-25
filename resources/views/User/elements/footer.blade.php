@@ -108,7 +108,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js" integrity="sha512-VEd+nq25CkR676O+pLBnDW09R7VQX9Mdiij052gVCp5yVH3jGtH70Ho/UUv4mJDsEdTvqRCFZg0NKGiojGnUCw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script src="{{ asset('oganimaster/js/jquery-3.3.1.min.js')}}"></script>
 <script src="{{ asset('oganimaster/js/bootstrap.min.js')}}"></script>
-<script src="{{ asset('oganimaster/js/jquery.nice-select.min.js')}}"></script>
+{{--<script src="{{ asset('oganimaster/js/jquery.nice-select.min.js')}}"></script>--}}
 <script src="{{ asset('oganimaster/js/jquery-ui.min.js')}}"></script>
 <script src="{{ asset('oganimaster/js/jquery.slicknav.js')}}"></script>
 <script src="{{ asset('oganimaster/js/mixitup.min.js')}}"></script>

@@ -69,16 +69,24 @@ class UserController extends Controller
 
     public function user_inf_edid(Request $rq)
     {
+        $rq->validate([
+                'Ho'=>'required',
+                'Ten'=> 'required',
+                'SDT' => 'required',
+            ]);
+
         DB::table('nguoidung')
-                ->where('id', Session()->get('id'))
-                ->update([  'Ho' => $rq->ho,
-                            'Ten' => $rq->ten,
-                            'SDT' => $rq->sdt,
-                            'GioiTinh' => $rq->gt,
-                            'id_tinh' => $rq->id_tinh,
+                ->where('id', Auth::user()->id)
+                ->update([  'Ho' => $rq->Ho,
+                            'Ten' => $rq->Ten,
+                            'SDT' => $rq->SDT,
+                            'GioiTinh' => $rq->GioiTinh,
+                            'ma_tinh' => $rq->ma_tinh,
+                            'ma_huyen' => $rq->ma_huyen,
+                            'ma_xa' => $rq->ma_xa,
                             'DiaChi' => $rq->dia_chi
                         ]);
-        return back()->with('mes', 'Sửa đổi thông tin thành công');
+        return back()->with('success', 'Sửa đổi thông tin thành công');
     }
 
     public function don_mua()

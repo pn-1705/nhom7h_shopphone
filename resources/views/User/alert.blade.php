@@ -9,9 +9,6 @@
     </div>
 @endif
 @if(Session::has('success'))
-    <script>
-        console.log("111");
-    </script>
     <div class="alert alert-success alert-dismissible fade show">
         {!! Session::get('success') !!}
     </div>

@@ -159,4 +159,19 @@ class HomeController extends Controller
 
         return response()->json(['stt' => $request->stt, 'data' => $data]);
     }
+    public function addcoupon(Request $request)
+    {
+        $mgg = $request->magiamgia;
+        $data=null;
+        if($mgg!=null){
+            $data=DB::table('magiamgia')
+                ->where('magiamgia','like',$mgg)
+                ->where('trangthai','>',0)
+                ->where('soluongcon','>0',0)
+                ->first();
+        }
+
+        \Illuminate\Support\Facades\Session::flash('success', 'Thêm mã giảm giá thành công');
+        return json(['data' => $data]);
+    }
 }
