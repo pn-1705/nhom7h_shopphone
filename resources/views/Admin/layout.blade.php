@@ -4,7 +4,7 @@
     <LINK REL="SHORTCUT ICON" HREF="/backend/img/logo-title.jpg">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>SHOP 7H | {{ $title ?? Dashboard }}</title>
+    <title>SHOP 7H | {{ $title ?? "Dashboard" }}</title>
 
     @include('admin.elements.header-libs')
     <!-- Google Font: Source Sans Pro -->

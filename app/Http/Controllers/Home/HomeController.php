@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 
 class HomeController extends Controller
@@ -18,14 +19,30 @@ class HomeController extends Controller
     public function index(Request $request)
     {
         $search = $request->search;
+        $dm = $request->danhmuc;
         if ($search!=null){
             $sanpham = DB::table('sanpham')
                 ->where('TenSP', 'like', '%' . $search . '%')
+                ->where('trangthai', '=', 1)
                 ->orderBy('id', 'asc')
                 ->paginate(16)
                 ->withQueryString();
         }else{
             $sanpham = DB::table('sanpham')
+                ->where('trangthai', '=', 1)
+                ->orderBy('id', 'asc')
+                ->paginate(16)->withQueryString();
+        }
+        if ($dm!=null){
+            $sanpham = DB::table('sanpham')
+                ->where('DM_id', '=', $dm)
+                ->where('trangthai', '=', 1)
+                ->orderBy('id', 'asc')
+                ->paginate(16)
+                ->withQueryString();
+        }else{
+            $sanpham = DB::table('sanpham')
+                ->where('trangthai', '=', 1)
                 ->orderBy('id', 'asc')
                 ->paginate(16)->withQueryString();
         }

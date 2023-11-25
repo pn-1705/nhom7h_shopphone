@@ -132,5 +132,4 @@
             tinh_phi_ship();
         });
     </script>
-
 @endsection

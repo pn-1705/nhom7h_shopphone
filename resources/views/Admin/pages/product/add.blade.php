@@ -18,7 +18,7 @@
 
     <!-- Main content -->
     <section class="content">
-        <form action="{{ route("admin.product.save") }}" method="POST">
+        <form enctype="multipart/form-data" action="{{ route("admin.product.save") }}" method="POST">
             @csrf
             <div class="row">
                 <div class="col-md-12">
@@ -63,15 +63,15 @@
                                 <div>
                                     <div class="">
                                         <label for="inputStatus">Hình ảnh 1</label>
-                                        <input name="HinhAnh1" type="file">
+                                        <input name="HinhAnh1" type="file" id="myFile" accept="image/*">
                                     </div>
                                     <div class="">
                                         <label for="inputStatus">Hình Ảnh 2</label>
-                                        <input name="HinhAnh2" type="file">
+                                        <input name="HinhAnh2" type="file" id="myFile" accept="image/*">
                                     </div>
                                     <div class="">
                                         <label for="HinhAnh3">Hình Ảnh 3</label>
-                                        <input name="HinhAnh3" type="file">
+                                        <input name="HinhAnh3" type="file" id="myFile" accept="image/*">
                                     </div>
                                 </div>
                             </div>

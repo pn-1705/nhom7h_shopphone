@@ -22,4 +22,5 @@
     <link rel="stylesheet" href="{{ asset('oganimaster/css/slicknav.min.css')}}" type="text/css">
     <link rel="stylesheet" href="{{ asset('oganimaster/css/style.css')}}" type="text/css">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    @yield('head')
 </head>

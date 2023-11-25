@@ -83,11 +83,11 @@ class UserController extends Controller
 
     public function don_mua()
     {
-        if(Session()->get('id') == null)
+        if(Auth::check() == false)
             return redirect()->intended('/login');
         else {
             $result = DB::table('hoadon')
-                        ->where('MaND', Session()->get('id'))
+                        ->where('MaND', Auth::user()->id)
                         ->orderBy('id', 'desc')
                         ->get();
             return view('user.pages.don_mua', ['don_mua'=>$result]);

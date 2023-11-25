@@ -13,6 +13,38 @@
         $yeuthich=null;
     }
 ?>
+<style>
+    .notification-icon {
+        cursor: pointer;
+    }
+
+    .menu {
+        display: none;
+        position: absolute;
+        top: 40px;
+        right: 10px;
+        background-color: #fff;
+        border: 1px solid #ccc;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .menu ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .menu li {
+        padding: 10px;
+        border-bottom: 1px solid #eee;
+        cursor: pointer;
+    }
+
+    .menu li:hover {
+        background-color: #f0f0f0;
+    }
+</style>
+
 <div class="humberger__menu__overlay"></div>
 <div class="humberger__menu__wrapper">
     <div class="humberger__menu__logo">
@@ -78,7 +110,7 @@
             <li><a href="#">Pages</a>
                 <ul class="header__menu__dropdown">
                     <li><a href="./shop-details.html">Shop Details</a></li>
-                    <li><a href="./shoping-cart.html">Shoping Cart</a></li>
+                    <li><a href="./cart">Shoping Cart</a></li>
                     <li><a href="./checkout.html">Check Out</a></li>
                     <li><a href="./blog-details.html">Blog Details</a></li>
                 </ul>
@@ -174,7 +206,7 @@
                         <li><a href="#">Pages</a>
                             <ul class="header__menu__dropdown">
                                 <li><a href="./shop-details.html">Shop Details</a></li>
-                                <li><a href="./shoping-cart.html">Shoping Cart</a></li>
+                                <li><a href="./cart">Shoping Cart</a></li>
                                 <li><a href="./checkout.html">Check Out</a></li>
                                 <li><a href="./blog-details.html">Blog Details</a></li>
                             </ul>
@@ -188,9 +220,10 @@
                 <div class="header__cart">
                     <ul>
                         @if(\Illuminate\Support\Facades\Auth::check())
-                            <li><a href="#"><i class="fa fa-heart"></i> <span>
+                            <li><a><i class="fa fa-bell"></i> <span>
                                 {{$yeuthich->count()}}
-                            </span></a></li>
+                                </span></a>
+                            </li>
                         @endif
                         @if(\Illuminate\Support\Facades\Auth::check())
                             <li><a href="/cart"><i class="fa fa-shopping-bag"></i><span>
@@ -226,7 +259,7 @@
                             $danhmuc=\Illuminate\Support\Facades\DB::table('danhmuc')->get();
                         ?>
                         @foreach($danhmuc as $dm)
-                            <li><a href="#">{{$dm->TenDM}}</a>
+                            <li><a href="/?danhmuc={{$dm->id}}">{{$dm->TenDM}}</a>
                             </li>
                         @endforeach
                     </ul>

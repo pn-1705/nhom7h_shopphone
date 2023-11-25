@@ -114,6 +114,7 @@
 <script src="{{ asset('oganimaster/js/mixitup.min.js')}}"></script>
 <script src="{{ asset('oganimaster/js/owl.carousel.min.js')}}"></script>
 <script src="{{ asset('oganimaster/js/main.js')}}"></script>
+@yield('footer');
 <script>
     // Xóa thông báo thành công sau 5 giây
     setTimeout(function() {

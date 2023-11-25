@@ -202,7 +202,7 @@
                                             {{ $vl -> TenLSP }}
                                             <span class="float-right">
                                             <b>
-                                                <image style="width: 100px" src="http://localhost/phonestore/public/backend/img/company/{{ $vl -> HinhAnh }}"></image>
+                                                <image style="width: 100px" src="{{asset('/backend/img/company/'.$vl -> HinhAnh)}}"></image>
                                             </b>
                                         </span>
                                         </div>

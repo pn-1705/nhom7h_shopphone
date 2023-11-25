@@ -297,7 +297,7 @@
             <h1>Create Account</h1>
             <div class="social-icons">
                 <a href="/google" class="icon"><i class="fa-brands fa-google-plus-g"></i></a>
-                <a href="#" class="icon"><i class="fa-brands fa-facebook-f"></i></a>
+                <a href="/facebook" class="icon"><i class="fa-brands fa-facebook-f"></i></a>
                 <a href="#" class="icon"><i class="fa-brands fa-github"></i></a>
             </div>
             <span>or use your email for registeration</span>
@@ -316,7 +316,7 @@
             <h1>Sign In</h1>
             <div class="social-icons">
                 <a href="/google" class="icon"><i class="fa-brands fa-google-plus-g"></i></a>
-                <a href="#" class="icon"><i class="fa-brands fa-facebook-f"></i></a>
+                <a href="/facebook" class="icon"><i class="fa-brands fa-facebook-f"></i></a>
                 <a href="#" class="icon"><i class="fa-brands fa-github"></i></a>
             </div>
             <span>or use your email password</span>

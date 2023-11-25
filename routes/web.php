@@ -29,6 +29,7 @@ Route::get('/forget/{customer}/{token}', [\App\Http\Controllers\Login\LoginContr
 
 
 Route::get('/productdetails', [\App\Http\Controllers\Product\ProductController::class,'show'])->name('viewProductDetails');
+Route::get('/productdetails', [\App\Http\Controllers\Product\ProductController::class,'show'])->name('product.view');
 
 //Route Admin
 Route::middleware(['auth','isAdmin:2'])->group(function() {
@@ -112,6 +113,7 @@ Route::middleware(['auth','isAdmin:1,2,3'])->group(function() {
     Route::get('cart', [\App\Http\Controllers\Product\CartController::class, 'index'])->name('cart');
     Route::POST('updatecart', [\App\Http\Controllers\Product\CartController::class, 'update']);
     Route::get('addtocart', [\App\Http\Controllers\Product\CartController::class, 'store']);
+    Route::get('updatecart',[\App\Http\Controllers\Product\CartController::class, 'updatecart'])->name("user.updatecart");
 
     Route::get('/profile', [\App\Http\Controllers\User\UserController::class, 'user_inf'])->name('user.inf');
     Route::get('/doi_mk', [\App\Http\Controllers\User\UserController::class, 'doi_mk_view'])->name('user.doi_mk_view');
@@ -119,6 +121,11 @@ Route::middleware(['auth','isAdmin:1,2,3'])->group(function() {
 
     Route::post('/thanhtoan', [\App\Http\Controllers\User\HomeController::class, 'thanh_toan'])->name('user.thanh_toan');
     Route::get('/thanhtoan', [\App\Http\Controllers\User\HomeController::class, 'thanh_toan_view'])->name('user.thanh_toan');
+
+    Route::get('/get_data_location',[\App\Http\Controllers\User\HomeController::class, 'get_data_location'])->name('user.get_data_location');
+
+    Route::get('/quanlydonhang',[\App\Http\Controllers\User\UserController::class, 'don_mua'])->name('user.don_mua');
+    Route::get('/in_don_hang/{id_hd}',[\App\Http\Controllers\User\UserController::class, 'in_don_hang'])->name('user.in_don_hang');
 
 
 

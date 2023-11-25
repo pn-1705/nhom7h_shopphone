@@ -87,7 +87,8 @@ class HomeController extends Controller
         }
         $gia=$subtotal;
         $km=$subtotal-$total;
-        return view('user.pages.thanh_toan', ['cart'=>$cart, 'nguoi_dung'=>$nguoi_dung, 'tinh_thanh'=>$tinh_thanh,'km'=>$km,'gia'=>$gia]);
+//        return view('user.pages.thanh_toan', ['cart'=>$cart, 'nguoi_dung'=>$nguoi_dung, 'tinh_thanh'=>$tinh_thanh,'km'=>$km,'gia'=>$gia]);
+        return view('user.pages.checkout', ['cart'=>$cart, 'nguoi_dung'=>$nguoi_dung, 'tinh_thanh'=>$tinh_thanh,'km'=>$km,'gia'=>$gia]);
     }
 
     public function thanh_toan(Request $rq)
@@ -120,7 +121,7 @@ class HomeController extends Controller
                 ->where('id',  $dm->id_sp)
                 ->update(['SoLuong'=> $dm->SoLuong-$sl]);
         }
-        return redirect()->intended('/user/don_mua');
+        return redirect()->intended('/quanlydonhang');
     }
 
     public function search(Request $rq)
@@ -132,5 +133,30 @@ class HomeController extends Controller
                     ->orderBy('id', 'desc')
                     ->get();
         return view('user.pages.search', ['sp_tim_kiem'=>$result, 'tu_khoa'=>$input]);
+    }
+    public function get_data_location(Request $request)
+    {
+        $idt = $request->id_tinh;
+        $idh = $request->id_huyen;
+        if ($request->stt==null){
+        }else{
+            if($request->stt==0){
+                $data=    DB::table('devvn_quanhuyen')
+                    ->select("devvn_quanhuyen.*")
+                    ->join('devvn_tinhthanhpho','devvn_quanhuyen.matp','=','devvn_tinhthanhpho.matp')
+                    ->where('devvn_quanhuyen.matp', '=', $idt)
+                    ->get();
+            }
+            if($request->stt==1){
+                $data= DB::table('devvn_xaphuongthitran')
+                    ->select('devvn_xaphuongthitran.*')
+                    ->join('devvn_quanhuyen','devvn_quanhuyen.maqh','=','devvn_xaphuongthitran.maqh')
+                    ->where('devvn_xaphuongthitran.maqh', '=', $idh)
+                    ->get();
+            }
+        }
+        \Illuminate\Support\Facades\Session::flash('success', 'Chỉnh sửa thành công');
+
+        return response()->json(['stt' => $request->stt, 'data' => $data]);
     }
 }

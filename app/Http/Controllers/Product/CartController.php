@@ -79,7 +79,7 @@ class CartController extends Controller
         }
 
         \Illuminate\Support\Facades\Session::flash('success','Thêm thành công');
-        return redirect('cart');
+        return redirect()->back();
     }
 
     /**
@@ -149,5 +149,42 @@ class CartController extends Controller
     public function destroy($id)
     {
         //
+    }
+    public function updatecart(Request $request)
+    {
+        $idsp = $request->id;
+        $sl = $request->soluong;
+        $idND = Auth::user()->id;
+        $tt= $request->trangthai;
+        if ($sl>0){
+            DB::table('giohang')
+                ->where('id_sp','=',$idsp)
+                ->where('id_nd','=',$idND)
+                ->update(['so_luong'=>$sl,'trangthai'=>$tt]);
+        }else{
+            DB::table('giohang')
+                ->where('id_sp','=',$idsp)
+                ->where('id_nd','=',$idND)
+                ->delete();
+        }
+        $updatedCart = DB::table('giohang')
+            ->join('sanpham','sanpham.id','=','id_sp')
+            ->where('id_nd','=',Auth::user()->id)
+            ->where('giohang.trangthai','=',1)
+            ->get();
+
+        $totalValue = $updatedCart->sum(function ($item) {
+            return $item->giatrithuc * $item->so_luong;
+        });
+
+        $SubtotalValue = $updatedCart->sum(function ($item) {
+            return $item->DonGia * $item->so_luong;
+        });
+
+        \Illuminate\Support\Facades\Session::flash('success','Chỉnh sửa thành công');
+
+        return response()->json(['totalValue' => $totalValue, 'SubtotalValue' => $SubtotalValue]);
+        //
+
     }
 }

@@ -60,13 +60,41 @@ class ProductController extends Controller
         $new->TenSP = $request->TenSP;
         $new->DonGia = $request->DonGia;
         $new->SoLuong = $request->SoLuong;
-        $new->HinhAnh1 = 'img/products/'.$request->HinhAnh1;
-        $new->HinhAnh2 = 'img/products/'.$request->HinhAnh2;
-        $new->HinhAnh3 = 'img/products/'.$request->HinhAnh3;
+        $request->validate([
+            'HinhAnh1' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'HinhAnh2' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'HinhAnh3' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ]);
+
+        $request->validate([
+            'HinhAnh1' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'HinhAnh2' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'HinhAnh3' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ]);
+        if ($request->hasFile('HinhAnh1')) {
+            $fileName1 = $request->file('HinhAnh1')->getClientOriginalName();
+            $fileName1 = time() . '_1' . $fileName1;
+            $request->file('HinhAnh1')->storeAs('public/img/products', $fileName1);
+            $new->HinhAnh1 = 'img/products/'.$fileName1;
+        }
+        if ($request->hasFile('HinhAnh2')) {
+            $fileName2 = $request->file('HinhAnh2')->getClientOriginalName();
+            $fileName2 = time() . '_2' . $fileName2;
+            $request->file('HinhAnh2')->storeAs('public/img/products', $fileName2);
+            $new->HinhAnh2 = 'img/products/'.$fileName2;
+        }
+        if ($request->hasFile('HinhAnh3')) {
+            $fileName3 = $request->file('HinhAnh3')->getClientOriginalName();
+            $fileName3 = time() . '_3' . $fileName3;
+            $request->file('HinhAnh3')->storeAs('public/img/products', $fileName3);
+            $new->HinhAnh3 = 'img/products/'.$fileName3;
+        }
+
         $new->KM_id = $request->KM_id;
         $new->TrangThai = $request->TrangThai;
         $new->save();
-        return redirect()->route("admin.product.index")->with('add', 'Data inserted thành công');
+
+        return redirect()->route("admin.product.index")->with('add', 'Sửa thành công');
     }
 
     public function edit($id)
@@ -84,6 +112,7 @@ class ProductController extends Controller
 
     public function update($id, Request $request)
     {
+
         $new = Product::find($id);
         $new->TH_id = $request->TH_id;
         $new->DM_id = $request->DM_id;
@@ -91,9 +120,31 @@ class ProductController extends Controller
         $new->TenSP = $request->TenSP;
         $new->DonGia = $request->DonGia;
         $new->SoLuong = $request->SoLuong;
-        $new->HinhAnh1 = $request->HinhAnh1;
-        $new->HinhAnh2 = $request->HinhAnh2;
-        $new->HinhAnh3 = $request->HinhAnh3;
+        $request->validate([
+            'HinhAnh1' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'HinhAnh2' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'HinhAnh3' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ]);
+
+        if ($request->has('HinhAnh1')) {
+            $fileName1 = $request->file('HinhAnh1')->getClientOriginalName();
+            $fileName1 = time() . '_1' . $fileName1;
+            $request->file('HinhAnh1')->storeAs('public/img/products', $fileName1);
+            $new->HinhAnh1 = 'img/products/'.$fileName1;
+        }
+        if ($request->has('HinhAnh2')) {
+            $fileName2 = $request->file('HinhAnh2')->getClientOriginalName();
+            $fileName2 = time() . '_2' . $fileName2;
+            $request->file('HinhAnh2')->storeAs('public/img/products', $fileName2);
+            $new->HinhAnh2 = 'img/products/'.$fileName2;
+        }
+        if ($request->has('HinhAnh3')) {
+            $fileName3 = $request->file('HinhAnh3')->getClientOriginalName();
+            $fileName3 = time() . '_3' . $fileName3;
+            $request->file('HinhAnh3')->storeAs('public/img/products', $fileName3);
+            $new->HinhAnh3 = 'img/products/'.$fileName3;
+        }
+
         $new->KM_id = $request->KM_id;
         $new->TrangThai = $request->TrangThai;
         $new->save();

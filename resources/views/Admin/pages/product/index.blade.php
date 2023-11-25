@@ -120,15 +120,15 @@
                                 <ul class="list-inline">
                                     <li class="list-inline-item">
                                         <img alt="Avatar" class="concac"
-                                             src="/backend/{{$value -> HinhAnh1}}">
+                                             src="{{asset('storage/'.$value -> HinhAnh1)}}">
                                     </li>
                                     <li class="list-inline-item">
                                         <img alt="Avatar" class="concac"
-                                             src="/backend/{{$value -> HinhAnh2}}">
+                                             src="{{asset('storage/'.$value -> HinhAnh2)}}">
                                     </li>
                                     <li class="list-inline-item">
                                         <img alt="Avatar" class="concac"
-                                             src="/backend/{{$value -> HinhAnh3}}">
+                                             src="{{asset('storage/'.$value -> HinhAnh3)}}">
                                     </li>
                                 </ul>
                             </td>

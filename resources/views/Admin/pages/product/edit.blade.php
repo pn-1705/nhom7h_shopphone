@@ -18,7 +18,7 @@
 
     <!-- Main content -->
     <section class="content">
-        <form action="{{ route("admin.product.edit", $product->id) }}" method="POST">
+        <form enctype="multipart/form-data" action="{{ route("admin.product.edit", $product->id) }}" method="POST">
             @csrf
             <div class="row">
                 <div class="col-md-12">
@@ -65,15 +65,15 @@
                                 <div>
                                     <div class="">
                                         <label for="inputStatus">Hình ảnh 1</label>
-                                        <input value="{{ $product -> HinhAnh1 }}" name="HinhAnh1" type="file">
+                                        <input value="{{ $product -> HinhAnh1 }}" name="HinhAnh1" type="file" id="myFile" accept="image/*">
                                     </div>
                                     <div class="">
                                         <label for="inputStatus">Hình Ảnh 2</label>
-                                        <input value="{{ $product -> HinhAnh2 }}" name="HinhAnh2" type="file">
+                                        <input value="{{ $product -> HinhAnh2 }}" name="HinhAnh2" type="file" id="myFile" accept="image/*">
                                     </div>
                                     <div class="">
                                         <label for="HinhAnh3">Hình Ảnh 3</label>
-                                        <input value="{{ $product -> HinhAnh3 }}" name="HinhAnh3" type="file">
+                                        <input value="{{ $product -> HinhAnh3 }}" name="HinhAnh3" type="file" id="myFile" accept="image/*">
                                     </div>
                                 </div>
                             </div>

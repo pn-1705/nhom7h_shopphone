@@ -24,14 +24,12 @@ class LoginController extends Controller
     {
         //
         if (Auth::check()){
+            if (Auth::user()->google_stt==0) {
+                Auth::logout();
+                Session::flash("error",'Bạn chưa kích hoạt tài khoản');
+                return redirect()->route('login');
+            }
             return redirect()->route('viewHome');
-//            if (Auth::user()->Quyen_id==1){
-//                return redirect()->route('viewHome');
-//            }elseif (Auth::user()->Quyen_id==2){
-//                return redirect()->route('admin.dashboard');
-//            }elseif (Auth::user()->Quyen_id==3){
-//                return redirect()->route('CTV');
-//            }
         }
         return  view('User.pages.login');
     }
@@ -45,13 +43,14 @@ class LoginController extends Controller
     {
         //
         $request->validate([
-            'name'=> 'required',
+            'Ho'=>'required',
+            'Ten'=> 'required',
             'email' => 'required',
             'password' => 'required',
             'confirmpassword'=>'required_with:password'
         ]);
         $token = strtoupper(\Illuminate\Support\Str::random(15));
-        $data=$request->only('name','email','password');
+        $data=$request->only('Ho','Ten','email','password');
         $data['token']=$token;
 
         $checkmail = DB::table('nguoidung')
@@ -60,7 +59,8 @@ class LoginController extends Controller
         if ($checkmail->isEmpty()){
             DB::table('nguoidung')->insert(
                 [
-                    'Ten'=> $request->input('name'),
+                    'Ho'=> $request->input('Ho'),
+                    'Ten'=> $request->input('Ten'),
                     'username'=> $request->input('email'),
                     'email'=>$request->input('email'),
                     'password'=> bcrypt($request->input('password')),
@@ -96,7 +96,6 @@ class LoginController extends Controller
 
         if (Auth::attempt($credentials)){
             if (Auth::user()->google_stt==0) {
-
                 Auth::logout();
                 Session::flash("error",'Bạn chưa kích hoạt tài khoản');
                 return redirect()->route('login');
