@@ -1,13 +1,10 @@
-@extends('user.layout')
-
-@section('title', 'Quên mật khẩu')
-
+@extends('User.master')
 @section('content')
 <style>
     .mat_khau{
         width: 100%;
-        padding: 100px 0;        
-        background-color: #fff;            
+        padding: 100px 0;
+        background-color: #fff;
     }
     .mat_khau>div, .mat_khau>form{
     	width: 350px;
@@ -53,38 +50,47 @@
 
 <div id="mkhau" class="mat_khau">
     <div>
-        <div id="load" class="hidden">
-            <span class="fas fa-spinner xoay icon"> </span>
-        </div>
     	<h2>QUÊN MẬT KHẨU</h2>
-	    <input type="text" id="email" placeholder="Email (Nhập đúng Email của bạn)" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" required autocomplete="off">
         <div id="submit1">
+	        <input type="text" id="email" placeholder="Email (Nhập đúng Email của bạn)" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" required autocomplete="off">
             <p id="error1" class="error"></p>
-            <input type="submit" value="GỬI" onclick="kt_email()">
+            <p id="success1" style="color: #00bc8c"></p>
+            <button id="btn_email" value="GỬI" class="site-btn" style="width: 100%!important;">Gửi</button>
         </div>
-	    <div id="ma_xn" class="hidden">
-	    	<p class="thong_bao">
-	    		Một mã xác nhận đã được gửi đến email của bạn, vui lòng kiểm tra và nhập vào ô dưới.
-	    	</p>
-	    	<input type="text" id="mxn" placeholder="Nhập mã xác nhận" pattern=".{5,}" required autocomplete="off">
-            <p id="error2" class="error"></p>
-	    	<input type="submit" value="GỬI" onclick="kt_ma_xn()">
-	    </div>
     </div>
 </div>
-
-<script type="text/javascript">
-    $('#email').keypress(function(event){
-        var keycode = (event.keyCode ? event.keyCode : event.which);
-        if (keycode == '13') {
-            kt_email();
-        }
-    });
-    $('#mxn').keypress(function(event){
-        var keycode = (event.keyCode ? event.keyCode : event.which);
-        if (keycode == '13') {
-            kt_ma_xn();
-        }
-    });
-</script>
 @endsection
+<footer>
+    <script type="text/javascript">
+        window.addEventListener('load', function() {
+            document.getElementById('btn_email').addEventListener('click', function(event) {
+                kt_email();
+            });
+            document.getElementById('email').addEventListener('keypress',function (event){
+                var keycode = (event.keyCode ? event.keyCode : event.which);
+                if (keycode == '13') {
+                    kt_email();
+                }
+            });
+        });
+
+        function kt_email() {
+            email = document.getElementById('email').value;
+            if(email == '') {
+                document.getElementById('error1').innerHTML = 'Vui lòng nhập email';
+            } else {
+                $.ajax({
+                    url: "/kt_email?email="+email,
+                    type: "GET",
+                    dataType: "html",
+                    success: function(data) {
+                            document.getElementById('error1').innerHTML = data;
+                    },
+                    error: function() {
+                        alert("Lỗi khi tải dữ liệu.");
+                    }
+                });
+            }
+        }
+    </script>
+</footer>

@@ -39,15 +39,10 @@ if (Auth::check()) {
     <!-- Checkout Section Begin -->
     <section class="checkout spad">
         <div class="container">
-{{--            <div class="row">--}}
-{{--                <div class="col-lg-12">--}}
-{{--                    <h6><span class="icon_tag_alt"></span> Have a coupon? <a href="#">Click here</a> to enter your code--}}
-{{--                    </h6>--}}
-{{--                </div>--}}
-{{--            </div>--}}
             <div class="checkout__form">
                 <h4>Chi tiết thanh toán</h4>
-                <form action="/thanhtoan">
+                <form action="{{route('user.thanh_toan_p')}}" method="POST">
+                    @csrf
                     <div class="row">
                         <div class="col-lg-8 col-md-6">
                             <div class="row">
@@ -127,13 +122,13 @@ if (Auth::check()) {
                             <div class="checkout__input__checkbox">
                                 <label for="diff-acc">
                                     Nhận hàng tại quán?
-                                    <input type="checkbox" id="diff-acc">
+                                    <input type="checkbox" id="diff-acc" name="nhantaiquan">
                                     <span class="checkmark"></span>
                                 </label>
                             </div>
                             <div class="checkout__input">
                                 <p>Ghi chú<span>*</span></p>
-                                <input type="text"
+                                <input type="text" name="ghichu"
                                        placeholder="Ghi chú thêm cho quán.">
                             </div>
                         </div>
@@ -158,20 +153,12 @@ if (Auth::check()) {
                                 <p id="inforpgg" style="color: red"></p>
                                 <div class="checkout__order__total">Mã giảm giá <span id="mgg" style="color: black">0</span></div>
                                 <div class="checkout__order__total">Total <span id="tong_cong" data-key="$gia-$km">{{number_format($gia-$km+35000, 0, ',', '.')}}</span></div>
-                                <div class="checkout__input__checkbox">
-                                    <label for="payment">
-                                        Check Payment
-                                        <input type="checkbox" id="payment">
-                                        <span class="checkmark"></span>
-                                    </label>
-                                </div>
-                                <div class="checkout__input__checkbox">
-                                    <label for="paypal">
-                                        Paypal
-                                        <input type="checkbox" id="paypal">
-                                        <span class="checkmark"></span>
-                                    </label>
-                                </div>
+                                <select name="pttt" id="changePTTT" >
+                                    <option value="">Thanh toán khi nhận hàng</option>
+                                    <option value="Banking">Banking</option>
+                                </select>
+                                <p id="inforpttt" style="color: red"></p>
+                                <a href="/naptien" id="naptien" style="display: none">Nạp tiền tại đây</a>
                                 <button type="submit" class="site-btn">PLACE ORDER</button>
                             </div>
                         </div>
@@ -190,6 +177,9 @@ if (Auth::check()) {
             var mgg =document.getElementById('mgg');
             var tc = tong_cong.textContent.replace(/\./g, '');
             var in4 = document.getElementById('inforpgg');
+            var tth =parseInt(document.getElementById('tong_tien_hang').textContent.replace(/\./g, ''));
+            var km =parseInt(document.getElementById('km').textContent.replace(/\./g, ''));
+            var ship =parseInt(document.getElementById('ship').textContent.replace(/\./g, ''));
             $.ajax({
                 url: "addcoupon?magiamgia="+magiamgia,
                 type: "GET",
@@ -205,13 +195,17 @@ if (Auth::check()) {
                         }else{
                             giam= parsedData.giatri;
                         }
-                        tong_cong.innerHTML=(tc-giam).toLocaleString('vi-VN');
-                        mgg.innerHTML=giam.toLocaleString('vi-VN');
-                        in4.innerHTML="Bạn vừa nhập mã: "+ parsedData.magiamgia +":"+parsedData.mota;
+                        if (parsedData.toithieu<tc){
+                            tong_cong.innerHTML=(tc-giam).toLocaleString('vi-VN');
+                            mgg.innerHTML=giam.toLocaleString('vi-VN');
+                            in4.innerHTML="Bạn vừa nhập mã: "+ parsedData.magiamgia +":"+parsedData.mota;
+                        }else{
+                            tong_cong.innerHTML=(tth-km+ship).toLocaleString('vi-VN');
+                            in4.innerHTML="Bạn vừa nhập mã: "+ parsedData.magiamgia +". "+parsedData.mota+". Nhưng bạn không đủ điều kiện sử dụng mã giảm giá này";
+                            mgg.innerHTML="0";
+                        }
+
                     }else{
-                        var tth =parseInt(document.getElementById('tong_tien_hang').textContent.replace(/\./g, ''));
-                        var km =parseInt(document.getElementById('km').textContent.replace(/\./g, ''));
-                        var ship =parseInt(document.getElementById('ship').textContent.replace(/\./g, ''));
                         tong_cong.innerHTML=(tth-km+ship).toLocaleString('vi-VN');
                         in4.innerHTML="Mã giảm giá không tồn tại hoặc đã hết lượt sử dụng";
                         mgg.innerHTML="0";
@@ -289,9 +283,22 @@ if (Auth::check()) {
                 // Ngăn chặn sự kiện mặc định của button
                 event.preventDefault();
             });
+            var $select = document.getElementById('changePTTT');
+            var naptien=document.getElementById('naptien');
+            $select.addEventListener('change',function (event){
+                var pttt=$select.selectedIndex;
+                var in4 = document.getElementById('inforpttt');
+                var tong_cong =document.getElementById('tong_cong').textContent.replace(/\./g, '');
+                if (pttt==1 && (parseInt({{\Illuminate\Support\Facades\Auth::user()->sodu}})< parseInt(tong_cong))){
+                    in4.innerHTML= "Số dư tài khoản bạn không đủ để thực hiện thanh toán";
+                    naptien.style.display = "block";
+                    console.log(naptien);
+                }else{
+                    in4.innerHTML= "";
+                    naptien.style.display = "none";
+                }
+            });
             updateSelect(-1);
         });
-
-
     </script>
 @endsection

@@ -4,7 +4,7 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="SHORTCUT ICON" href="/imgs/logo_title.png">
-	<title>TNT Shop | Xuất hóa đơn</title>
+	<title>SHOP 7H | Xuất hóa đơn</title>
 	<style type="text/css">
 		h1, h2{
 			margin-top: 80px;
@@ -30,7 +30,7 @@
 </head>
 <body>
 
-	<h1>TNT SHOP HOA DON</h1>
+	<h1>HOA DON</h1>
 	<table class="nguoi_dung">
 		<tr>
 			<td>Ma hoa don:</td>

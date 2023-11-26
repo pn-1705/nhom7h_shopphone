@@ -121,7 +121,8 @@
                     dataType: "html",
                     success: function (data) {
                         var alertDiv = $('<div class="alert alert-success alert-dismissible fade show" role="alert">');
-                        alertDiv.html('<strong>Success!</strong> Thêm thành công.');
+                            alertDiv.html('<strong>Success!</strong> Thêm thành công.');
+
                         // Append the alert to a container (e.g., a div with the ID "alert-container")
                         $('#alert_container').append(alertDiv);
 
@@ -132,7 +133,6 @@
                                 successAlerts[i].remove();
                             }
                         }, 2000);// 5000 milliseconds = 5 seconds
-                        alert("Thêm thành công.");
                     },
                     error: function () {
                         alert("Lỗi khi tải dữ liệu.");

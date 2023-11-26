@@ -39,7 +39,6 @@
 {{--</script>--}}
 <script type="text/javascript">
     function sortStatus_Order() {
-
         var input, table, tr, td, i, txtValue;
         input = document.getElementById("sortStatus").value.toUpperCase();
         table = document.getElementById("tbOrder");
@@ -48,6 +47,23 @@
         // Loop through all table rows, and hide those who don't match the search query
         for (i = 0; i < tr.length; i++) {
             td = tr[i].getElementsByTagName("td")[8];
+            if (td) {
+                txtValue = td.textContent || td.innerText;
+                if (txtValue.toUpperCase().indexOf(input) > -1) {
+                    tr[i].style.display = "";
+                } else {
+                    tr[i].style.display = "none";
+                }
+            }
+        }
+    }
+    function sortStatus_naptien() {
+        var input, table, tr, td, i, txtValue,span;
+        input = document.getElementById("sortStatus").value.toUpperCase();
+        table = document.getElementById("tbOrder");
+        tr = table.getElementsByTagName("tr");
+        for (i = 0; i < tr.length; i++) {
+            td = tr[i].getElementsByTagName("td")[4];
             if (td) {
                 txtValue = td.textContent || td.innerText;
                 if (txtValue.toUpperCase().indexOf(input) > -1) {

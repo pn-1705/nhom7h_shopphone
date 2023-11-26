@@ -3,7 +3,10 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Laravel\Socialite\Facades\Socialite;
 
 class FacebookController extends Controller
@@ -91,26 +94,20 @@ class FacebookController extends Controller
         try {
 
             $user = Socialite::driver('facebook')->user();
-            dd($user);
-            $finduser = User::where('facebook_id', $user->id)->first();
-
+            $finduser = DB::table('nguoidung')
+                ->where('facebook_id', $user->id)->first();
             if($finduser){
-
                 Auth::login($finduser);
-
-                return redirect()->intended('dashboard');
-
+                return redirect()->route('viewHome');
             }else{
                 $newUser = User::create([
-                    'name' => $user->name,
+                    'Ten' => $user->name,
                     'email' => $user->email,
                     'facebook_id'=> $user->id,
                     'password' => encrypt('123456dummy')
                 ]);
-
                 Auth::login($newUser);
-
-                return redirect()->intended('dashboard');
+                return redirect()->intended('viewHome');
             }
 
         } catch (Exception $e) {
@@ -126,7 +123,7 @@ class FacebookController extends Controller
 
             if($finduser){
 
-                Auth::login($finduser);
+                Auth::loginUsingId($finduser->id);
 
                 return redirect()->intended('dashboard');
 
@@ -138,7 +135,7 @@ class FacebookController extends Controller
                     'password' => encrypt('123456dummy')
                 ]);
 
-                Auth::login($newUser);
+                Auth::loginUsingId($newUser->id);
 
                 return redirect()->intended('dashboard');
             }

@@ -20,6 +20,10 @@ class HomeController extends Controller
     {
         $search = $request->search;
         $dm = $request->danhmuc;
+        $sanpham = DB::table('sanpham')
+            ->where('trangthai', '=', 1)
+            ->orderBy('id', 'asc')
+            ->paginate(16)->withQueryString();
         if ($search!=null){
             $sanpham = DB::table('sanpham')
                 ->where('TenSP', 'like', '%' . $search . '%')
@@ -27,24 +31,14 @@ class HomeController extends Controller
                 ->orderBy('id', 'asc')
                 ->paginate(16)
                 ->withQueryString();
-        }else{
-            $sanpham = DB::table('sanpham')
-                ->where('trangthai', '=', 1)
-                ->orderBy('id', 'asc')
-                ->paginate(16)->withQueryString();
         }
-        if ($dm!=null){
+        if ($dm!=null) {
             $sanpham = DB::table('sanpham')
                 ->where('DM_id', '=', $dm)
                 ->where('trangthai', '=', 1)
                 ->orderBy('id', 'asc')
                 ->paginate(16)
                 ->withQueryString();
-        }else{
-            $sanpham = DB::table('sanpham')
-                ->where('trangthai', '=', 1)
-                ->orderBy('id', 'asc')
-                ->paginate(16)->withQueryString();
         }
 
         $danhmuc = DB::table('danhmuc')

@@ -20,6 +20,6 @@
 @endif
 @if(session('logout_success'))
     <div class="alert alert-success">
-        {{ session('logout_success') }}
+        {!! session('logout_success') !!}
     </div>
 @endif

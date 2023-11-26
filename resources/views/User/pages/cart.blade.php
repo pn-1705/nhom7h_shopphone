@@ -171,8 +171,7 @@
                 closeIcon.addEventListener('click', function () {
                     // Get the closest 'tr' element (table row) to the clicked icon
                     var row = this.closest('tr');
-                    // Set the value of the associated quantity input to '0/{{$sp->SoLuong}}'
-                    row.querySelector('.quantity_input').value = '0/{{$sp->SoLuong}}';
+                    row.querySelector('.quantity_input').value = '0/1';
                     // Hide the entire row
                     row.style.display = 'none';
                     var btn_update = document.getElementById ('UpdateCart');

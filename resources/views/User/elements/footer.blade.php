@@ -123,5 +123,5 @@
         for (var i = 0; i < successAlerts.length; i++) {
             successAlerts[i].remove();
         }
-    }, 2000);// 5000 milliseconds = 5 seconds
+    }, 5000);// 5000 milliseconds = 5 seconds
 </script>

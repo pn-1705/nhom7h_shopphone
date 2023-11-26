@@ -22,6 +22,14 @@ class isAdmin
             Session::flash("error",'Bạn phải đăng nhập mới có thể vào trang này.');
             return redirect()->route('login');
         }
+//        if(Auth::user()->password==null){
+//            Session::flash("error",'Bạn phải đăng nhập mới có thể vào trang này.');
+//            return redirect()->route('login');
+//        }
+//        if(Auth::user()->password==null){
+//            Session::flash("error",'Bạn phải đăng nhập mới có thể vào trang này.');
+//            return redirect()->route('login');
+//        }
         $userRole = Auth::user()->Quyen_id;
         foreach ($roles as $role) {
             if ($userRole == $role) {

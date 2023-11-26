@@ -92,7 +92,7 @@
                         @endif
                         <li><a href="/profile">Cập nhật thông tin</a></li>
                         <li><a href="/doi_mk">Đổi mật khẩu</a></li>
-                        <li><a href="#">Nạp số dư</a></li>
+                        <li><a href="/naptien">Nạp số dư</a></li>
                         <li><a href="/logout">Đăng xuất</a></li>
                     </ul>
                 </div>

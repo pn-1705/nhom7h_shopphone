@@ -101,6 +101,19 @@ class UserController extends Controller
             return view('user.pages.don_mua', ['don_mua'=>$result]);
         }
     }
+    public function locdonmua(Request $request)
+    {
+        if(Auth::check() == false)
+            return redirect()->intended('/login');
+        else {
+            $result = DB::table('hoadon')
+                ->where('MaND', Auth::user()->id)
+                ->where('TrangThai','=',$request->trangthai)
+                ->orderBy('id', 'desc')
+                ->get();
+            return view('user.ajax.don_mua_fil', ['don_mua'=>$result]);
+        }
+    }
 
     public function in_don_hang($id_hd)
     {
@@ -112,7 +125,7 @@ class UserController extends Controller
     public function in_don_hang_noi_dung($id_hd)
     {
         $nguoi_dung = DB::table('hoadon')->where('id', $id_hd)->first();
-        $van_chuyen = $nguoi_dung->id_tinh = 15 ? 20000 : 35000;
+        $van_chuyen = $nguoi_dung->ma_tinh = 15 ? 20000 : 35000;
 
         $sp_thanh_toan = DB::table('chitiethoadon')->where('MaHD', $id_hd)->get();
         $san_pham=array();
@@ -137,10 +150,30 @@ class UserController extends Controller
         }
         return view('user.pages.xuat_hoa_don', ['id_hd'=>$id_hd, 'nguoi_dung'=>$nguoi_dung, 'san_pham'=>$san_pham, 'gia'=>$gia, 'van_chuyen'=>$van_chuyen]);
     }
-
-    public function thanhtoan($id_hd)
+    public function naptien(Request $request)
     {
-        return view('user.pages.thanh_toan', ['id_hd'=>$id_hd, 'nguoi_dung'=>$nguoi_dung, 'san_pham'=>$san_pham, 'gia'=>$gia, 'van_chuyen'=>$van_chuyen]);
+            return view('user.pages.naptien');
     }
+    public function xacnhannap(Request $request)
+    {
+//        dd($request);
+        $request->validate([
+            'username'=>'required',
+            'bank'=> 'required',
+            'amonut' => 'required',
+            'ndck' => 'required',
+        ]);
+        DB::table('lichsunap')
+            ->insert([
+                'idnd'=>$request->username,
+                'ndck'=>$request->ndck,
+                'giatri'=>$request->amonut,
+                'ngay'=>now(),
+                'trangthai'=>0,
+        ]);
+        Session::flash("success","Gửi thành công. Vui lòng xác nhận");
+        return back();
+    }
+
 
 }

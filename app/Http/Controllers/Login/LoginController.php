@@ -25,8 +25,8 @@ class LoginController extends Controller
         //
         if (Auth::check()){
             if (Auth::user()->google_stt==0) {
+                Session::flash("error",'Bạn chưa kích hoạt tài khoản. <a href="/kichhoatlai?email="'.Auth::user()->email.'">Ấn vào đây để nhận lại email</a>');
                 Auth::logout();
-                Session::flash("error",'Bạn chưa kích hoạt tài khoản');
                 return redirect()->route('login');
             }
             return redirect()->route('viewHome');
@@ -96,8 +96,9 @@ class LoginController extends Controller
 
         if (Auth::attempt($credentials)){
             if (Auth::user()->google_stt==0) {
+                Session::flash("error",'Bạn chưa kích hoạt tài khoản. <a href="/kichhoatlai?email='.Auth::user()->email.'">Ấn vào đây để nhận lại email</a>');
                 Auth::logout();
-                Session::flash("error",'Bạn chưa kích hoạt tài khoản');
+//                Session::flash("error",'Bạn chưa kích hoạt tài khoản');
                 return redirect()->route('login');
             }
             Session::flash('message', 'Đăng nhập thành công');
@@ -191,9 +192,50 @@ class LoginController extends Controller
             return redirect()->route('login');
         }
     }
-    public function forget()
+    public function forget(Request $request)
     {
-        Auth::logout();
-        return redirect()->route('viewHome');
+        if ($request->token!=null){
+            $customer = DB::table('nguoidung')
+                ->where('id' ,'=', $request->customer)
+                ->where('maXN','=',$request->token)
+                ->first();
+            if($customer == null){
+                Session::flash('error','Xác thực thất bại');
+                return redirect()->route('login');
+            }else{
+                DB::table('nguoidung')
+                    ->where('id', '=', $request->customer)
+                    ->where('maXN', '=', $request->token)
+                    ->update([
+                        'password' => bcrypt($request->token),
+                        'maXN'=>null,
+                    ]);
+                Session::flash('success','Kích hoạt mật khẩu mới thành công.');
+                return redirect()->route('login');
+            }
+        }
+    }
+    public function quenmk()
+    {
+        return view('User.pages.quen_mk');
+    }
+    public function kichhoatlai(Request $request){
+        $request->only('email');
+        $token = strtoupper(\Illuminate\Support\Str::random(15));
+        DB::table('nguoidung')
+            ->where('email','=',$request->input('email'))
+            ->update([
+                'google_token'=>$token,
+            ]);
+        $customer = DB::table('nguoidung')
+            ->where('email','=',$request->input('email'))
+            ->first();
+        $email=$customer->email;
+        Mail::send('MailTo.xacthuc', compact('customer'), function ($email) use ($customer) {
+            $email->subject('Email kích hoạt tài khoản');
+            $email->to($customer->email, $customer->Ten);
+        });
+        Session::flash('success','Gửi email kích hoạt thành công');
+        return redirect()->route('login');
     }
 }

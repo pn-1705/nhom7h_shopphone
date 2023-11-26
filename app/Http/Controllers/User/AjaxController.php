@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\User;
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Http\Request;
 use function redirect;
@@ -10,7 +12,7 @@ use function view;
 
 class AjaxController extends Controller
 {
-    public function add_cart($id_nd, $id_product, $so_luong) {   	
+    public function add_cart($id_nd, $id_product, $so_luong) {
         $list = DB::table('giohang')->where('id_nd', $id_nd)->where('id_sp', $id_product)->first();
         if($list) {
             $sl = $list->so_luong + $so_luong;
@@ -36,21 +38,29 @@ class AjaxController extends Controller
         return view('user.ajax.cart', ['list_cart' => $result]);
     }
 
-    public function kt_email($email)
+    public function kt_email(Request $request)
     {
-        $result = DB::table('nguoidung')->where('email', $email)->first();
+        $request->only('email');
+        $email=$request->email;
+        $result = DB::table('nguoidung')->where('email', '=',$email)->first();
         if(!$result) {
-            echo 'sai';
+            echo 'Email vừa nhập sai';
         } else {
             $rand = 'ABCDEFGHJKLMNOPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz0123456789';
-            $maXN = substr(str_shuffle($rand), 0, 5);
-            Session::put('ma_xn', $maXN);
-            $to      = $email;
-            $subject = 'TNT SHOP - ĐỪNG QUÊN MẬT KHẨU NỮA BẠN NHÉ!';
-            $message = 'Mã xác nhận của bạn là: '.$maXN;
-            $headers = 'From: emailtudonggui@gmail.com'. phpversion();
-            mail($to, $subject, $message, $headers);
+            $maXN = substr(str_shuffle($rand), 0, 6);
+            DB::table('nguoidung')
+                ->where('email', '=',$email)
+                ->update([
+                   'maXN'=>$maXN,
+                ]);
+            $customer=$result;
+            Mail::send('MailTo.forget', compact('customer','maXN'), function ($email) use ($customer) {
+                $email->subject('Email lấy lại mật khẩu');
+                $email->to($customer->email, $customer->Ten);
+            });
+            echo 'Chúng tôi vừa gửi cho bạn 1 email. Vui lòng kiểm tra email và làm theo hướng dẫn để lấy lại mật khẩu.';
         }
+
     }
 
     public function kt_ma_xn($ma_xn, $email)
@@ -68,7 +78,7 @@ class AjaxController extends Controller
                                     FROM khuyenmai, sanpham, danhmuc, loaisanpham
                                     where sanpham.KM_id=khuyenmai.id and sanpham.DM_id=danhmuc.id and sanpham.TH_id=loaisanpham.id
                                     and khuyenmai.id!=1
-                                    and ((CURDATE() BETWEEN NgayBD and NgayKT) or (NgayKT is NULL)) 
+                                    and ((CURDATE() BETWEEN NgayBD and NgayKT) or (NgayKT is NULL))
                                     and sanpham.TrangThai != 0
                                     ORDER by DonGia desc');
         $trang_max = count($sp_khuyen_mai) > ($i-1)*9+9 ? ($i-1)*9+9 : count($sp_khuyen_mai);
@@ -82,13 +92,13 @@ class AjaxController extends Controller
                     ->where('TrangThai', '!=', 0);
         if($sx!=0) {
             switch ($sx) {
-                case 'giam':                
+                case 'giam':
                     $result = $result->orderBy('DonGia', 'desc');
                     break;
                 case 'tang':
                     $result = $result->orderBy('DonGia', 'asc');
-                    break;           
-                default:                    
+                    break;
+                default:
                     break;
             }
         }
@@ -111,8 +121,8 @@ class AjaxController extends Controller
                     break;
                 case '6':
                     $result = $result->where('DonGia', '>=', 20000000);
-                    break;         
-                default:                    
+                    break;
+                default:
                     break;
             }
         }

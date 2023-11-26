@@ -167,6 +167,20 @@
                         </p>
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a href="{{ route('admin.naptien.index') }}"
+                       class="nav-link {{ Route::is('admin.naptien.index') ? 'active' : '' }}">
+                        @if(DB::table('lichsunap')->where('trangthai','=',0)->count()!=0)
+                            <span class="badge badge-danger right">
+                                    {{DB::table('lichsunap')->where('trangthai','=',0)->count()}}
+                            </span>
+                        @endif
+                        <i class="nav-icon fas fa-money-bill-wave"></i>
+                        <p>
+                            Yêu cầu chuyển tiền
+                        </p>
+                    </a>
+                </li>
 {{--                <li class="nav-header">QUẢN TRỊ</li>--}}
 {{--                <li class="nav-item">--}}
 {{--                    <a href="pages/calendar.html" class="nav-link">--}}

@@ -23,8 +23,13 @@ Route::get('/google', [\App\Http\Controllers\Api\GoogleController::class, 'getGo
 Route::get('/google/callback', [\App\Http\Controllers\Api\GoogleController::class, 'loginCallback']);
 Route::get('/facebook', [\App\Http\Controllers\Api\FacebookController::class, 'getFBSignInUrl']);
 Route::get('/facebook/callback', [\App\Http\Controllers\Api\FacebookController::class, 'loginFBCallback']);
+Route::get('/kichhoatlai', [\App\Http\Controllers\Login\LoginController::class,'kichhoatlai'])->name('kichhoatlai');
 Route::get('/activate/{customer}/{token}', [\App\Http\Controllers\Login\LoginController::class,'activate'])->name('activate');
 Route::get('/forget/{customer}/{token}', [\App\Http\Controllers\Login\LoginController::class,'forget'])->name('forget');
+Route::get('/quenmk', [\App\Http\Controllers\Login\LoginController::class,'quenmk'])->name('quenmk');
+Route::get('/kt_email', [\App\Http\Controllers\User\AjaxController::class,'kt_email']);
+Route::get('/kt_ma_xn/{ma_xn}/{email}', [\App\Http\Controllers\User\AjaxController::class,'kt_ma_xn']);
+
 
 
 
@@ -105,6 +110,11 @@ Route::middleware(['auth','isAdmin:2'])->group(function() {
             Route::post('/edit/{id}',[\App\Http\Controllers\Admin\UserController::class,'update'])->name('admin.user.edit');
             Route::get('/destroy/{id}',[\App\Http\Controllers\Admin\UserController::class,'destroy'])->name('admin.user.getDestroy');
         });
+        Route::prefix('naptien')->group(function () {
+            Route::get('/',[\App\Http\Controllers\Admin\NapTienController::class,'index'])->name('admin.naptien.index');
+            Route::get('/activate/{id}',[\App\Http\Controllers\Admin\NapTienController::class,'activate'])->name('admin.naptien.activate');
+            Route::get('/cancel/{id}', [\App\Http\Controllers\Admin\NapTienController::class,'cancel'])->name('admin.naptien.cancel');
+        });
     });
 });
 //Route Logout
@@ -121,14 +131,18 @@ Route::middleware(['auth','isAdmin:1,2,3'])->group(function() {
     Route::get('/doi_mk', [\App\Http\Controllers\User\UserController::class, 'doi_mk_view'])->name('user.doi_mk_view');
     Route::post('/doi_mk', [\App\Http\Controllers\User\UserController::class, 'doi_mk'])->name('user.doi_mk');
 
-    Route::post('/thanhtoan', [\App\Http\Controllers\User\HomeController::class, 'thanh_toan'])->name('user.thanh_toan');
+    Route::post('/thanhtoan', [\App\Http\Controllers\User\HomeController::class, 'thanh_toan'])->name('user.thanh_toan_p');
     Route::get('/thanhtoan', [\App\Http\Controllers\User\HomeController::class, 'thanh_toan_view'])->name('user.thanh_toan');
     Route::get('/addcoupon', [\App\Http\Controllers\User\HomeController::class, 'addcoupon'])->name('user.addcoupon');
 
     Route::get('/get_data_location',[\App\Http\Controllers\User\HomeController::class, 'get_data_location'])->name('user.get_data_location');
 
     Route::get('/quanlydonhang',[\App\Http\Controllers\User\UserController::class, 'don_mua'])->name('user.don_mua');
+    Route::get('/locdonmua',[\App\Http\Controllers\User\UserController::class, 'locdonmua'])->name('user.locdonmua');
     Route::get('/in_don_hang/{id_hd}',[\App\Http\Controllers\User\UserController::class, 'in_don_hang'])->name('user.in_don_hang');
+
+    Route::get('naptien', [\App\Http\Controllers\User\UserController::class, 'naptien'])->name('naptien');
+    Route::post('xacnhannap', [\App\Http\Controllers\User\UserController::class, 'xacnhannap'])->name('xacnhannap');
 
 
 
